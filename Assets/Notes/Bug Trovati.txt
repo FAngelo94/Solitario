@@ -1,0 +1,2 @@
+BUG TROVATI
+1) Quando finisco il deck la mossa "back" non funziona, mi fa tornare il punteggio a +100 però il deck non ritorna scoperto e posso riusarlo senza perdere punti praticamente

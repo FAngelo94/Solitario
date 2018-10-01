@@ -1,0 +1,6 @@
+5    -> svelare una carta nei deck sotto
+10   -> dal deck sopra al posizionamento
+5    -> dal deck sopra a quelli sotto
+10   -> dai deck sotto al posizionamento 
+-100 -> ogni volta che il deck sopra finisce e ricomincia
+-15  -> dal posizionamento ai deck sotto
