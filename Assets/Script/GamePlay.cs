@@ -205,7 +205,8 @@ public class GamePlay:MonoBehaviour {
             //Set Position
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
-            fatherPos.z = card.transform.position.z;
+            //fatherPos.z = card.transform.position.z;
+            fatherPos.z -= 1;
             scriptCard.SetNewOriginalPosition(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;
@@ -276,7 +277,8 @@ public class GamePlay:MonoBehaviour {
             //setup the position
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
-            fatherPos.z = card.transform.position.z;
+            //fatherPos.z = card.transform.position.z;
+            fatherPos.z -= 1;
             scriptCard.SetNewOriginalPosition(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;
@@ -329,7 +331,8 @@ public class GamePlay:MonoBehaviour {
             //setup the position
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
-            fatherPos.z = card.transform.position.z;
+            //fatherPos.z = card.transform.position.z;
+            fatherPos.z -= 1;
             scriptCard.SetNewOriginalPosition(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;

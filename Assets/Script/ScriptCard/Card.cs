@@ -43,6 +43,8 @@ public class Card : TouchManager  {
     public GameObject FatherCard { get; set; }//card below this
     public GameObject ChildCard { get; set; }//card above this
 
+    private bool checkFollowCardDelay;
+
     private void Awake()
     {
         managerMovement = new MovementCard();
@@ -57,6 +59,7 @@ public class Card : TouchManager  {
 
         FatherCard = null;
         ChildCard = null;
+        checkFollowCardDelay = true;
     }
 	
 	// Update is called once per frame
@@ -81,12 +84,12 @@ public class Card : TouchManager  {
     AndroidJavaObject currentActivity;
     public void MyShowToastMethod()
     {
-        if (Application.platform == RuntimePlatform.Android)
+        /*if (Application.platform == RuntimePlatform.Android)
         {
             showToastOnUiThread(toastString);
         }
         else
-            Debug.Log(toastString);
+            Debug.Log(toastString);*/
     }
 
     void showToastOnUiThread(string toastString)
@@ -202,16 +205,28 @@ public class Card : TouchManager  {
     //Public Methods
     public void FollowCard(float z)
     {
+        if (checkFollowCardDelay)
+        {
+            checkFollowCardDelay = false;
+            IEnumerator courutine = FollowCardDelay(z);
+            StartCoroutine(courutine);
+        }
+    }
+    IEnumerator FollowCardDelay(float z)
+    {
         Vector3 p = FatherCard.transform.position;
         p.y = FatherCard.transform.position.y - GameManager.instance.VerticalSpaceBetweenCard;
         p.z = z;
         transform.position = new Vector3(transform.position.x, transform.position.y, z);//Set the z immediatly
         managerMovement.TranslateCard(gameObject, p);
-        if(ChildCard!=null)
+        yield return new WaitForSeconds(0.005f);
+        if (ChildCard != null)
         {
             ChildCard.GetComponent<Card>().FollowCard(z - 1);
         }
+        checkFollowCardDelay = true;
     }
+    
 
     public void SetNewOriginalPosition(Vector3 newPoint)
     {
@@ -262,14 +277,17 @@ public class Card : TouchManager  {
     }
     public void RotateCard()
     {
+        Debug.Log("RotateCard");
         managerMovement.RotateCard(gameObject);
     }
     public void RotateFrontCard()
     {
+        Debug.Log("RotateFrontCard");
         managerMovement.RotateFrontCard(gameObject);
     }
     public void RotateBackCard()
     {
+        Debug.Log("RotateBackCard");
         managerMovement.RotateBackCard(gameObject);
     }
 }

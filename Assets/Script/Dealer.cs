@@ -34,7 +34,7 @@ public class Dealer : MonoBehaviour {
     private GameObject BasicCard;
 
     private List<string> seeds = new List<string> { "H", "D", "C", "S" };
-    private int[] values = { 13 };
+    private int[] values = { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
 
     private bool setCardPosition;
     private bool finishSetUp;
@@ -69,7 +69,6 @@ public class Dealer : MonoBehaviour {
     private void SetUpGame()
     {
         FindColumns();
-        //ShuffleLists();
         IEnumerator courutine = SetUpCourutine();
         StartCoroutine(courutine);
         
@@ -79,10 +78,6 @@ public class Dealer : MonoBehaviour {
     {
         int count = 0;
         int column = 0;
-        /*foreach (int value in values)
-        {
-            foreach (string seed in seeds) 
-            {*/
         List<string[]> couplesOfValue = ShuffleLists();
         foreach (string[] couple in couplesOfValue)
         {
@@ -104,8 +99,6 @@ public class Dealer : MonoBehaviour {
             else
                 PutCardInDeck(newCard);
         }
-       /*     }
-        }*/
         finishSetUp = true;
         foreach (GameObject col in columns)
         {

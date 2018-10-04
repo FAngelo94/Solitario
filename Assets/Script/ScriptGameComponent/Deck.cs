@@ -46,10 +46,9 @@ public class Deck : TouchManager
                 newPoint.x -= GameManager.instance.OrizzontalSpaceBetweenCard * count;
                 newPoint.z = card.transform.position.z;
                 card.GetComponent<Card>().TraslateCard(newPoint);
+                card.GetComponent<Card>().RotateFrontCard();
                 if (!card.transform.position.Equals(newPoint))
                     checkMoveCard = true;//we need move card because it doesn't reach the new point
-                else
-                    card.GetComponent<Card>().RotateFrontCard();
             }
             count--;
             index++;
@@ -58,7 +57,10 @@ public class Deck : TouchManager
         //Disactive old card
         for (int i = 0; i < wasteCards.Count - 3; i++)
         {
-            wasteCards[i].SetActive(false);
+            if (wasteCards[i].activeSelf)
+            {
+                wasteCards[i].SetActive(false);
+            }
         }
     }
 
@@ -86,10 +88,8 @@ public class Deck : TouchManager
         int index = wasteCards.Count - 1;
         while (index >= 0)
         {
-
             Vector3 cardPos = wasteCards[index].transform.position;
             wasteCards[index].transform.position = new Vector3(cardPos.x, cardPos.y, -index);
-            
             index--;
         }
         //set card scripts
