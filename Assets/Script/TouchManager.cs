@@ -35,19 +35,19 @@ public class TouchManager : MonoBehaviour
 
     protected virtual void SpritePressedBegan()
     {
-        Debug.Log(gameObject.name + " -> SpritePressedBegan");
+        //Debug.Log(gameObject.name + " -> SpritePressedBegan");
     }
     protected virtual void SpritePressedEnded()
     {
-        Debug.Log(gameObject.name + " -> SpritePressedEnded");
+       // Debug.Log(gameObject.name + " -> SpritePressedEnded");
     }
     protected virtual void SpritePressedMoved()
     {
-        Debug.Log(gameObject.name + " -> SpritePressedMoved");
+        //Debug.Log(gameObject.name + " -> SpritePressedMoved");
     }
     protected virtual void SpritePressedStationary()
     {
-        Debug.Log(gameObject.name + " -> SpritePressedStationary");
+       // Debug.Log(gameObject.name + " -> SpritePressedStationary");
     }
 
 };

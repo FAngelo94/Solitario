@@ -36,8 +36,13 @@ public class Dealer : MonoBehaviour {
     private List<string> seeds = new List<string> { "H", "D", "C", "S" };
     private int[] values = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 };
 
+    private bool setCardPosition;
+    private bool finishSetUp;
+
     // Use this for initialization
     private void Start () {
+        setCardPosition = true;
+        finishSetUp = false;
         SetUpGame();
 
         /*FindColumns();
@@ -46,11 +51,18 @@ public class Dealer : MonoBehaviour {
     }
 
     private void Update()
-    { 
-        foreach(GameObject column in cardColumns)
+    {
+        if (setCardPosition && !finishSetUp)
         {
-            CardColumn script = column.GetComponent<CardColumn>();
-            script.SetUpCards();
+            bool needMove = false;
+            foreach (GameObject column in cardColumns)
+            {
+                CardColumn script = column.GetComponent<CardColumn>();
+                if (script.SetUpCards())
+                    needMove = true;
+            }
+            setCardPosition = !finishSetUp?true:needMove;
+            
         }
     }
 
@@ -58,11 +70,18 @@ public class Dealer : MonoBehaviour {
     {
         FindColumns();
         ShuffleLists();
+        IEnumerator courutine = SetUpCourutine();
+        StartCoroutine(courutine);
+        
+    }
+
+    IEnumerator SetUpCourutine()
+    {
         int count = 0;
         int column = 0;
-        foreach (string seed in seeds)
+        foreach (int value in values)
         {
-            foreach (int value in values)
+            foreach (string seed in seeds) 
             {
                 GameObject newCard = CreateCard(seed, value);
                 if (column <= 6)
@@ -74,16 +93,19 @@ public class Dealer : MonoBehaviour {
                         column++;
                         count = 0;
                     }
+                    yield return new WaitForSeconds(0.1f);
                 }
-                //else
-               //     PutCardInDeck(newCard);
+                else
+                     PutCardInDeck(newCard);
             }
         }
-        foreach(GameObject col in cardColumns)
+        finishSetUp = true;
+        foreach (GameObject col in cardColumns)
         {
             CardColumn script = col.GetComponent<CardColumn>();
             script.RotateLastCard();
         }
+        yield return null;
     }
 
     private void FindColumns()
@@ -121,7 +143,6 @@ public class Dealer : MonoBehaviour {
         int indexSeed = seeds.IndexOf(seed);
         GameObject newCard = Instantiate(BasicCard) as GameObject;
         newCard.transform.position = DeckObject.transform.position;
-        newCard.transform.rotation = new Quaternion(0, 0, 0, 0);
         newCard.transform.Find("Face/BigImage").GetComponent<SpriteRenderer>().sprite = SpriteSeeds[indexSeed];
         newCard.transform.Find("Face/LittleImage").GetComponent<SpriteRenderer>().sprite = SpriteSeeds[indexSeed];
         newCard.transform.Find("Face/Value").GetComponent<SpriteRenderer>().sprite = SpriteValues[value-1];

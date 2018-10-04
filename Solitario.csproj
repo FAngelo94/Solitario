@@ -310,6 +310,7 @@
     <Compile Include="Assets\Script\Deck.cs" />
     <Compile Include="Assets\Script\GameManager.cs" />
     <Compile Include="Assets\Script\MovementCard.cs" />
+    <Compile Include="Assets\Script\PositionGoalCard.cs" />
     <Compile Include="Assets\Script\TouchManager.cs" />
   </ItemGroup>
   <ItemGroup>

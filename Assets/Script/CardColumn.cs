@@ -5,17 +5,16 @@ using UnityEngine;
 public class CardColumn : MonoBehaviour {
 
     private List<GameObject> cards = new List<GameObject>();
-    private MovementCard movementCard = new MovementCard();
 
 	// Use this for initialization
-	void Start () {
-                
-	}
+	void Start ()
+    { 
+    }
 	
 	public void AddSingleCard(GameObject newCard)
     {
+        newCard.GetComponent<Card>().SetColumn(this);
         cards.Add(newCard);
-        
     }
 
     public bool SetUpCards()
@@ -28,7 +27,7 @@ public class CardColumn : MonoBehaviour {
             Vector2 cardPos = card.transform.position;
             if (!newPosition.Equals(cardPos))
             {
-                movementCard.TranslateCard(card, newPosition);
+                card.GetComponent<Card>().TraslateCard(newPosition);
                 check = true;
             }
             count++;
@@ -38,6 +37,15 @@ public class CardColumn : MonoBehaviour {
 
     public void RotateLastCard()
     {
-        movementCard.RotateCard(cards[cards.Count - 1]);
+        foreach (GameObject card in cards)
+            card.GetComponent<Card>().enabled = false;
+        cards[cards.Count - 1].GetComponent<Card>().enabled = true;
+        cards[cards.Count-1].GetComponent<Card>().RotateCard();
+    }
+
+    public void RemoveCard(GameObject card)
+    {
+        cards.Remove(card);
+        RotateLastCard();
     }
 }

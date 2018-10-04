@@ -14,10 +14,16 @@ public class GameManager : MonoBehaviour {
     }
 
     [SerializeField]
-    private float _verticalSpaceBetweenCard = 0.1f;
+    private float _verticalSpaceBetweenCard = 0.4f;
     public float VerticalSpaceBetweenCard
     {
         get { return _verticalSpaceBetweenCard; }
+    }
+    [SerializeField]
+    private float _orizzontalSpaceBetweenCard = 0.2f;
+    public float OrizzontalSpaceBetweenCard
+    {
+        get { return _orizzontalSpaceBetweenCard; }
     }
 
     // Use this for initialization
