@@ -12,6 +12,18 @@ public class Column : MonoBehaviour {
     }
 
     /// <summary>
+    /// Function to remove every card above a removed card in a column
+    /// </summary>
+    /// <param name="childCard">card you want to remove</param>
+    private void RemoveChildCard(GameObject childCard)
+    {
+        cards.Remove(childCard);
+        Card scriptCard = childCard.GetComponent<Card>();
+        if (scriptCard.ChildCard != null)
+            RemoveChildCard(scriptCard.ChildCard);
+    }
+
+    /// <summary>
     /// Add a new card and change its Z position
     /// </summary>
     /// <param name="newCard">new card</param>
@@ -22,7 +34,7 @@ public class Column : MonoBehaviour {
         Vector3 newPos = newCard.transform.position;
         newPos.z = -cards.Count;
         newCard.transform.position = newPos;
-        gameObject.GetComponent<Collider2D>().enabled = false;
+        //gameObject.GetComponent<Collider2D>().enabled = false;
     }
 
     public bool SetUpCards()
@@ -70,8 +82,8 @@ public class Column : MonoBehaviour {
     {
         Debug.Log("RemoveCard");
         cards.Remove(card);
-        if (cards.Count == 0)
-            gameObject.GetComponent<Collider2D>().enabled = true;
+        //if (cards.Count <= 0)
+        //    gameObject.GetComponent<Collider2D>().enabled = true;
         Card scriptCard = card.GetComponent<Card>();
         if (scriptCard.ChildCard != null)
         {//check if the card has child cards (cards that are above it)
@@ -85,20 +97,13 @@ public class Column : MonoBehaviour {
         {
             if (cards.Count > 0)
                 RotateLastCard();
-            else
-                gameObject.GetComponent<Collider2D>().enabled = true;
+           // else
+              //  gameObject.GetComponent<Collider2D>().enabled = true;
         }
     }
 
-    /// <summary>
-    /// Function to remove every card above a removed card in a column
-    /// </summary>
-    /// <param name="childCard">card you want to remove</param>
-    private void RemoveChildCard(GameObject childCard)
+    public int NumberOfCard()
     {
-        cards.Remove(childCard);
-        Card scriptCard = childCard.GetComponent<Card>();
-        if (scriptCard.ChildCard != null)
-            RemoveChildCard(scriptCard.ChildCard);
-    } 
+        return cards.Count;
+    }
 }

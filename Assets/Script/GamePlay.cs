@@ -169,7 +169,7 @@ public class GamePlay:MonoBehaviour {
     {
         Debug.Log("FromColumnToColumn");
         Card scriptCard = card.GetComponent<Card>();
-        if (scriptCard.Value == 13)
+        if (scriptCard.Value == 13 && newPosition.GetComponent<Column>().NumberOfCard()==0)
         {
             //Remove card frm the old column and put in the new empty column
             scriptCard.Column.RemoveCard(card);

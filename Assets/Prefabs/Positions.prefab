@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 114136076463266468}
   m_Layer: 0
   m_Name: PositionSpades
-  m_TagString: Untagged
+  m_TagString: PositionGoal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -120,7 +120,7 @@ GameObject:
   - component: {fileID: 114443112949349238}
   m_Layer: 0
   m_Name: PositionClubs
-  m_TagString: Untagged
+  m_TagString: PositionGoal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -200,7 +200,7 @@ GameObject:
   - component: {fileID: 114832672469025898}
   m_Layer: 0
   m_Name: PositionHearts
-  m_TagString: Untagged
+  m_TagString: PositionGoal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -217,7 +217,7 @@ GameObject:
   - component: {fileID: 114607123984722774}
   m_Layer: 0
   m_Name: PositionDiamonds
-  m_TagString: Untagged
+  m_TagString: PositionGoal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -514,7 +514,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db5b27c19a1bf1438986f9d876810e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: S
+  _seed: S
 --- !u!114 &114443112949349238
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -526,7 +526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db5b27c19a1bf1438986f9d876810e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: C
+  _seed: C
 --- !u!114 &114607123984722774
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -538,7 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db5b27c19a1bf1438986f9d876810e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: D
+  _seed: D
 --- !u!114 &114832672469025898
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -550,7 +550,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9db5b27c19a1bf1438986f9d876810e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Seed: H
+  _seed: H
 --- !u!212 &212236690839237460
 SpriteRenderer:
   m_ObjectHideFlags: 1
