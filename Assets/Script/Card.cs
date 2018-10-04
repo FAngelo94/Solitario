@@ -15,10 +15,10 @@ public class Card : TouchManager  {
         get { return _value; }
     }
 
-    private CardColumn _cardColumn;
-    public CardColumn CardColumn
+    private Column _column;
+    public Column Column
     {
-        get { return _cardColumn; }
+        get { return _column; }
     }
 
     private Deck _deck;
@@ -37,17 +37,25 @@ public class Card : TouchManager  {
     private bool selected;
     private Vector3 originalPosition;
     private Collider2D myCollider;
-    private Collider2D externalCollider;
+    private List<Collider2D> externalColliders=new List<Collider2D>();
+
+    public GameObject FatherCard { get; set; }//card below this
+    public GameObject ChildCard { get; set; }//card above this
+
+    private void Awake()
+    {
+        managerMovement = new MovementCard();
+    }
 
     // Use this for initialization
     void Start () {
-        managerMovement = new MovementCard();
+        //managerMovement = 
         selected = false;
         originalPosition = transform.position;
         myCollider = gameObject.GetComponent<Collider2D>();
-        externalCollider = null;
-        _cardColumn = null;
-        _deck = null;
+
+        FatherCard = null;
+        ChildCard = null;
     }
 	
 	// Update is called once per frame
@@ -57,14 +65,13 @@ public class Card : TouchManager  {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Card Trigger Enter");
-        externalCollider = collision;
+        Debug.Log("enter=" + collision);
+        externalColliders.Add(collision);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        Debug.Log("Card Trigger Exit");
-        externalCollider = null;
+        externalColliders.Remove(collision);
     }
 
     protected override void SpritePressedBegan()
@@ -79,10 +86,24 @@ public class Card : TouchManager  {
     {
         if (selected)
         {
-            if(externalCollider == null)
+            if (externalColliders.Count==0)
                 transform.position = originalPosition;
             else
-                AnalyzeCollision();
+            {
+                Collider2D nearestCollider = null;
+                float minDistance = float.MaxValue;
+                foreach(Collider2D c in externalColliders)
+                {
+                    float tmpDist = Vector2.Distance(transform.position, c.transform.position);
+                    if (tmpDist < minDistance)
+                    {
+                        minDistance = tmpDist;
+                        nearestCollider = c;
+                    }
+                }
+
+                GamePlay.instance.WhereIsCard(gameObject, nearestCollider);
+            }
         }
         selected = false;
     }
@@ -107,31 +128,16 @@ public class Card : TouchManager  {
         }
     }
 
-    /// <summary>
-    /// In this method I analyze where is the card when user
-    /// release it if the card enter in contanct with something
-    /// </summary>
-    private void AnalyzeCollision()
-    {
-        string tagCollision = externalCollider.gameObject.tag;
-        if(tagCollision.Equals("Card"))
-        {
-            Debug.Log(tagCollision);
-        }
-        if (tagCollision.Equals("PositionGoal"))
-        {
-            Debug.Log(tagCollision);
-        }
-        if (tagCollision.Equals("CardColumn"))
-        {
-            Debug.Log(tagCollision);
-        }
-    }
 
     //Public Methods
     public void SetNewOriginalPosition(Vector3 newPoint)
     {
         originalPosition = newPoint;
+        transform.position = originalPosition;
+    }
+    public void SetOldOriginalPosition()
+    {
+        transform.position = originalPosition;
     }
 
     public void SetCard(int v, string s)
@@ -140,26 +146,27 @@ public class Card : TouchManager  {
         _value = v;
     }
 
-    public void SetColumn(CardColumn column)
+    public void SetColumn(Column column)
     {
         _deck = null;
         _positionGoal = null;
-        _cardColumn = column;
+        _column = column;
     }
     public void SetDeck(Deck deck)
     {
         _positionGoal = null;
-        _cardColumn = null;
+        _column = null;
+        FatherCard = null;
+        ChildCard = null;
         _deck = deck;
     }
+
     public void SetPositionGoal(PositionGoalCard goal)
     {
-        if (CardColumn != null)
-        {
-            _cardColumn.RemoveCard(gameObject);
-            _cardColumn = null;
-        }
+        _column = null;
         _deck = null;
+        FatherCard = null;
+        ChildCard = null;
         _positionGoal = goal;
     }
 
@@ -171,5 +178,13 @@ public class Card : TouchManager  {
     public void RotateCard()
     {
         managerMovement.RotateCard(gameObject);
+    }
+    public void RotateFrontCard()
+    {
+        managerMovement.RotateFrontCard(gameObject);
+    }
+    public void RotateBackCard()
+    {
+        managerMovement.RotateBackCard(gameObject);
     }
 }

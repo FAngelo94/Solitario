@@ -14,14 +14,12 @@ public class Deck : TouchManager
     private List<GameObject> wasteCards = new List<GameObject>();
     
     private Collider2D myCollider;
-
-    private MovementCard movementCard;
+    
     private bool checkMoveCard;
 
     private void Start()
     {
         myCollider = gameObject.GetComponent<Collider2D>();
-        movementCard = new MovementCard();
         checkMoveCard = false;
     }
 
@@ -47,11 +45,11 @@ public class Deck : TouchManager
                 Vector3 newPoint = Waste.transform.position;
                 newPoint.x -= GameManager.instance.OrizzontalSpaceBetweenCard * count;
                 newPoint.z = card.transform.position.z;
-                movementCard.TranslateCard(card, newPoint);
+                card.GetComponent<Card>().TraslateCard(newPoint);
                 if (!card.transform.position.Equals(newPoint))
                     checkMoveCard = true;//we need move card because it doesn't reach the new point
                 else
-                    movementCard.RotateFrontCard(card);
+                    card.GetComponent<Card>().RotateFrontCard();
             }
             count--;
             index++;
@@ -62,14 +60,6 @@ public class Deck : TouchManager
         {
             wasteCards[i].SetActive(false);
         }
-    }
-
-    public void AddSingleCard(GameObject newCard)
-    {
-        newCard.GetComponent<Card>().SetDeck(this);
-        deckCards.Add(newCard);
-        newCard.transform.position = transform.position;
-        newCard.SetActive(false);
     }
 
     protected override void SpritePressedBegan()
@@ -89,11 +79,12 @@ public class Deck : TouchManager
         deckCards.Remove(deckCards[0]);
         //Move the card in waste
         wasteCards[wasteCards.Count - 1].SetActive(true);
+        Debug.Log("Deck in waste=" + (wasteCards[wasteCards.Count - 1].GetComponent<Card>().Deck == null));
         //Set card layout
         int index = wasteCards.Count - 1;
         while (index >= 0)
         {
-            Debug.Log("index=" + index);
+
             Vector3 cardPos = wasteCards[index].transform.position;
             wasteCards[index].transform.position = new Vector3(cardPos.x, cardPos.y, -index);
             
@@ -106,7 +97,6 @@ public class Deck : TouchManager
             script.enabled = (i == wasteCards.Count - 1 ? true : false);
         }
         checkMoveCard = true;
-        Debug.Log("Carte Rimaste="+deckCards.Count);
         if (deckCards.Count == 0)
         {
             transform.Find("Background").gameObject.SetActive(true);
@@ -116,12 +106,41 @@ public class Deck : TouchManager
 
     private void ResetDeck()
     {
-        transform.Find("Background").gameObject.SetActive(false);
-        transform.Find("Back").gameObject.SetActive(true);
-        foreach (GameObject card in wasteCards)
+        if (wasteCards.Count > 0)
         {
-            AddSingleCard(card);
+            transform.Find("Background").gameObject.SetActive(false);
+            transform.Find("Back").gameObject.SetActive(true);
+            foreach (GameObject card in wasteCards)
+            {
+                AddSingleCard(card);
+            }
+            wasteCards = new List<GameObject>();
         }
-        wasteCards=new List<GameObject>();
+    }
+
+    //Public method
+
+    public void AddSingleCard(GameObject newCard)
+    {
+        deckCards.Add(newCard);
+        newCard.GetComponent<Card>().SetDeck(this);
+        newCard.transform.position = transform.position;
+        newCard.SetActive(false);
+    }
+
+    public void RemoveLastCardFromWaste()
+    {
+        Debug.Log("RemoveLastCardFromWaste");
+        GameObject lastCard = wasteCards[wasteCards.Count - 1];
+        wasteCards.Remove(lastCard);
+        if (wasteCards.Count > 0)
+        {
+            wasteCards[wasteCards.Count - 1].GetComponent<Card>().enabled = true;
+            if (wasteCards.Count >= 3)
+            {
+                wasteCards[wasteCards.Count - 3].SetActive(true);
+            }
+            checkMoveCard = true;
+        }
     }
 }

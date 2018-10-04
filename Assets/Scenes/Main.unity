@@ -160,6 +160,10 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1343865211890758, guid: 243d9fd412f31404bb2dc5c4da2f2dfa, type: 2}
+      propertyPath: m_TagString
+      value: Deck
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 243d9fd412f31404bb2dc5c4da2f2dfa, type: 2}
   m_IsPrefabAsset: 0
@@ -348,31 +352,66 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1595715034511560, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
       propertyPath: m_TagString
-      value: CardColumn
+      value: Column
       objectReference: {fileID: 0}
     - target: {fileID: 1342536224228126, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
       propertyPath: m_TagString
-      value: CardColumn
+      value: Column
       objectReference: {fileID: 0}
     - target: {fileID: 1638040288233978, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
       propertyPath: m_TagString
-      value: CardColumn
+      value: Column
       objectReference: {fileID: 0}
     - target: {fileID: 1386186812121632, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
       propertyPath: m_TagString
-      value: CardColumn
+      value: Column
       objectReference: {fileID: 0}
     - target: {fileID: 1414552486630912, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
       propertyPath: m_TagString
-      value: CardColumn
+      value: Column
       objectReference: {fileID: 0}
     - target: {fileID: 1849442469293044, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
       propertyPath: m_TagString
-      value: CardColumn
+      value: Column
       objectReference: {fileID: 0}
     - target: {fileID: 1644792794806640, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
       propertyPath: m_TagString
-      value: CardColumn
+      value: Column
+      objectReference: {fileID: 0}
+    - target: {fileID: 61254967862015628, guid: 1c1bd20d3d87133489d08110306b633c,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61060204579138004, guid: 1c1bd20d3d87133489d08110306b633c,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61061131350661616, guid: 1c1bd20d3d87133489d08110306b633c,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61901016707281942, guid: 1c1bd20d3d87133489d08110306b633c,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61706621450559072, guid: 1c1bd20d3d87133489d08110306b633c,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61540870885702402, guid: 1c1bd20d3d87133489d08110306b633c,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 61460963271851410, guid: 1c1bd20d3d87133489d08110306b633c,
+        type: 2}
+      propertyPath: m_AutoTiling
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1c1bd20d3d87133489d08110306b633c, type: 2}
@@ -382,6 +421,22 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1641706561531980, guid: 1c1bd20d3d87133489d08110306b633c,
     type: 2}
   m_PrefabInternal: {fileID: 1628224934}
+--- !u!1 &1747348285 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1900195278942636, guid: a7327cfd930d28b419660b06395c3cbc,
+    type: 2}
+  m_PrefabInternal: {fileID: 875202767}
+--- !u!114 &1747348286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1747348285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eb4d9273f763cd479bb500f2fdc9b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1873782679
 GameObject:
   m_ObjectHideFlags: 0
@@ -464,6 +519,26 @@ Prefab:
     - target: {fileID: 1920247636811908, guid: 20ccd23230b7cbb4893c47f53c0b1f60, type: 2}
       propertyPath: m_TagString
       value: PositionGoal
+      objectReference: {fileID: 0}
+    - target: {fileID: 114832672469025898, guid: 20ccd23230b7cbb4893c47f53c0b1f60,
+        type: 2}
+      propertyPath: _seed
+      value: H
+      objectReference: {fileID: 0}
+    - target: {fileID: 114607123984722774, guid: 20ccd23230b7cbb4893c47f53c0b1f60,
+        type: 2}
+      propertyPath: _seed
+      value: D
+      objectReference: {fileID: 0}
+    - target: {fileID: 114443112949349238, guid: 20ccd23230b7cbb4893c47f53c0b1f60,
+        type: 2}
+      propertyPath: _seed
+      value: C
+      objectReference: {fileID: 0}
+    - target: {fileID: 114136076463266468, guid: 20ccd23230b7cbb4893c47f53c0b1f60,
+        type: 2}
+      propertyPath: _seed
+      value: S
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20ccd23230b7cbb4893c47f53c0b1f60, type: 2}

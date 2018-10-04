@@ -6,7 +6,11 @@ public class PositionGoalCard : MonoBehaviour {
 
     [SerializeField]
     [Header("Simbol of seed (H,D,C,S)")]
-    private string Seed;
+    private string _seed;
+    public string Seed
+    {
+        get { return _seed; }
+    }
 
     private List<GameObject> cards = new List<GameObject>();
 
@@ -21,29 +25,29 @@ public class PositionGoalCard : MonoBehaviour {
         Debug.Log("Trigger"+script.Seed + " - " + script.Value);
     }
 
-    public void AddCard(GameObject card)
+    /// <summary>
+    /// Add a new card and change its Z position
+    /// </summary>
+    /// <param name="newCard">new card</param>
+    public void AddCard(GameObject newCard)
     {
-        Card script = card.GetComponent<Card>();
-        if (script.Seed.Equals(Seed)) {
-            bool checkNewCard = false;
-            if (cards.Count == 0 && script.Value==0)
-            {
-                checkNewCard = true;
-            }
-            if(cards.Count > 0 && cards.Count+1 == script.Value)
-            {
-                checkNewCard = true;
-            }
-            if (checkNewCard)
-            {
-                cards.Add(card);
-                script.SetNewOriginalPosition(transform.position);
-            }
-        }
+        Debug.Log("AddCard");
+        newCard.GetComponent<Card>().SetPositionGoal(this);
+        if (cards.Count > 0)
+            cards[cards.Count - 1].GetComponent<Collider2D>().enabled=false;
+        cards.Add(newCard);
+        Vector3 newPos = newCard.transform.position;
+        newPos.z = -cards.Count;
+        newCard.transform.position = newPos;
+        gameObject.GetComponent<Collider2D>().enabled = false;
     }
 
-    public void RemoveCard(GameObject card)
+    public void RemoveCard()
     {
-        cards.Remove(card);
+        cards.Remove(cards[cards.Count-1]);
+        if(cards.Count>0)
+            cards[cards.Count - 1].GetComponent<Collider2D>().enabled = true;
+        else
+            gameObject.GetComponent<Collider2D>().enabled = true;
     }
 }
