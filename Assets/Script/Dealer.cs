@@ -34,7 +34,7 @@ public class Dealer : MonoBehaviour {
     private GameObject BasicCard;
 
     private List<string> seeds = new List<string> { "H", "D", "C", "S" };
-    private int[] values = { 3, 3, 3, 4, 5, 6, 7, 1, 2, 10, 11, 12, 13 };
+    private int[] values = { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
 
     private bool setCardPosition;
     private bool finishSetUp;
@@ -79,31 +79,38 @@ public class Dealer : MonoBehaviour {
     {
         int count = 0;
         int column = 0;
-        foreach (int value in values)
+        /*foreach (int value in values)
         {
             foreach (string seed in seeds) 
+            {*/
+        List<string[]> couplesOfValue = ShuffleLists();
+        foreach (string[] couple in couplesOfValue)
+        {
+            string seed = couple[1];
+            int value = int.Parse(couple[0]);
+
+            GameObject newCard = CreateCard(seed, value);
+            if (column <= 6)
             {
-                GameObject newCard = CreateCard(seed, value);
-                if (column <= 6)
+                PutCardInColumn(newCard, column);
+                count++;
+                if (count > column)
                 {
-                    PutCardInColumn(newCard, column);
-                    count++;
-                    if (count > column)
-                    {
-                        column++;
-                        count = 0;
-                    }
-                    yield return new WaitForSeconds(0.2f);
+                    column++;
+                    count = 0;
                 }
-                else
-                     PutCardInDeck(newCard);
+                yield return new WaitForSeconds(0.2f);
             }
+            else
+                PutCardInDeck(newCard);
         }
+       /*     }
+        }*/
         finishSetUp = true;
         foreach (GameObject col in columns)
         {
             Column script = col.GetComponent<Column>();
-            script.RotateLastCard();
+            script.RotateLastCardFistTime();
         }
         yield return null;
     }
@@ -119,22 +126,24 @@ public class Dealer : MonoBehaviour {
 
     }
 
-    private void ShuffleLists()
+    private List<string[]> ShuffleLists()
     {
-        for(int i=0;i<seeds.Count;i++)
+        List<string[]> couplesOfValue = new List<string[]>();
+        foreach (int value in values)
         {
-            int R = Random.Range(0, seeds.Count);
-            string tmp = seeds[i];
-            seeds[i] = seeds[R];
-            seeds[R] = tmp;
+            foreach (string seed in seeds)
+            {
+                couplesOfValue.Add(new string[] { value+"", seed });
+            }
         }
-        for (int i = 0; i < values.Length; i++)
+        for (int i = 0; i < couplesOfValue.Count; i++)
         {
-            int R = Random.Range(0, seeds.Count);
-            int tmp = values[i];
-            values[i] = values[R];
-            values[R] = tmp;
+            int r = Random.Range(0, couplesOfValue.Count);
+            string[] tmp = couplesOfValue[r];
+            couplesOfValue[r] = couplesOfValue[i];
+            couplesOfValue[i] = tmp;
         }
+        return couplesOfValue;
     }
 
     private GameObject CreateCard(string seed, int value)
@@ -155,7 +164,6 @@ public class Dealer : MonoBehaviour {
 
     private void PutCardInColumn(GameObject newCard,int col)
     {
-        Debug.Log("col=" + col);
         Column script = columns[col].GetComponent<Column>();
         script.AddSingleCard(newCard);
     }

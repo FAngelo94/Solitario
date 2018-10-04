@@ -22,7 +22,6 @@ public class PositionGoalCard : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Card script = collision.gameObject.GetComponent<Card>();
-        Debug.Log("Trigger"+script.Seed + " - " + script.Value);
     }
 
     /// <summary>

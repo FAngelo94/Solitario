@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -65,7 +66,6 @@ public class Card : TouchManager  {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("enter=" + collision);
         externalColliders.Add(collision);
     }
 
@@ -86,27 +86,30 @@ public class Card : TouchManager  {
     {
         if (selected)
         {
-            if (externalColliders.Count==0)
-                transform.position = originalPosition;
+            if (externalColliders.Count == 0)
+                SetOldOriginalPosition();
             else
             {
                 Collider2D nearestCollider = null;
                 float minDistance = float.MaxValue;
-                foreach(Collider2D c in externalColliders)
+                foreach (Collider2D c in externalColliders)
                 {
                     float tmpDist = Vector2.Distance(transform.position, c.transform.position);
-                    if (tmpDist < minDistance)
+                    if (tmpDist < minDistance && !CheckChild(c))
                     {
                         minDistance = tmpDist;
                         nearestCollider = c;
                     }
                 }
-
-                GamePlay.instance.WhereIsCard(gameObject, nearestCollider);
+                if (nearestCollider != null)
+                    GamePlay.instance.WhereIsCard(gameObject, nearestCollider);
+                else
+                    SetOldOriginalPosition();
             }
         }
         selected = false;
     }
+
     protected override void SpritePressedMoved()
     {
         FollowFinger();
@@ -123,13 +126,54 @@ public class Card : TouchManager  {
         {
             Vector3 p = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position);
             p.z = -50;
-            transform.position = new Vector3(transform.position.x, transform.position.y, -50);
+            transform.position = new Vector3(transform.position.x, transform.position.y, -50);//Set the z immediatly
             managerMovement.TranslateCard(gameObject, p);
+            if (ChildCard != null)
+            {
+                ChildCard.GetComponent<Card>().FollowCard(-51);
+            }
         }
     }
 
+    /// <summary>
+    /// Check if this card is collided with its child or with
+    /// a child of its child
+    /// </summary>
+    /// <param name="c">Collision considered</param>
+    /// <returns>true if this card is collided with its child or with a 
+    /// chils of its child</returns>
+    private bool CheckChild(Collider2D c)
+    {
+        Card script = c.gameObject.GetComponent<Card>();
+        if(script!=null)
+        {
+            
+            if (c.gameObject.Equals(ChildCard))//This card collide with its child
+                return true;
+            while (script.ChildCard != null)
+            {
+                if (c.gameObject.Equals(script.ChildCard))
+                    return true;
+                script=script.ChildCard.GetComponent<Card>();
+            }
+        }
+        return false;
+    }
 
     //Public Methods
+    public void FollowCard(float z)
+    {
+        Vector3 p = FatherCard.transform.position;
+        p.y = FatherCard.transform.position.y - GameManager.instance.VerticalSpaceBetweenCard;
+        p.z = z;
+        transform.position = new Vector3(transform.position.x, transform.position.y, z);//Set the z immediatly
+        managerMovement.TranslateCard(gameObject, p);
+        if(ChildCard!=null)
+        {
+            ChildCard.GetComponent<Card>().FollowCard(z - 1);
+        }
+    }
+
     public void SetNewOriginalPosition(Vector3 newPoint)
     {
         originalPosition = newPoint;
@@ -138,6 +182,8 @@ public class Card : TouchManager  {
     public void SetOldOriginalPosition()
     {
         transform.position = originalPosition;
+        if (ChildCard != null)
+            ChildCard.GetComponent<Card>().SetOldOriginalPosition();
     }
 
     public void SetCard(int v, string s)

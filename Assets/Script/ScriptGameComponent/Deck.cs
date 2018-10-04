@@ -70,6 +70,8 @@ public class Deck : TouchManager
                 TakeACard();
             else
                 ResetDeck();
+            if (deckCards.Count + wasteCards.Count != 0)
+                ScoreManager.instance.IncrementMoves();
         }
     }
 
@@ -115,6 +117,7 @@ public class Deck : TouchManager
                 AddSingleCard(card);
             }
             wasteCards = new List<GameObject>();
+            ScoreManager.instance.AddScore(-100);
         }
     }
 

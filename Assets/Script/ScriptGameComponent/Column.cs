@@ -51,13 +51,54 @@ public class Column : MonoBehaviour {
                 card.GetComponent<Card>().enabled = false;
             cards[cards.Count - 1].GetComponent<Card>().enabled = true;
             cards[cards.Count - 1].GetComponent<Card>().RotateCard();
+            ScoreManager.instance.AddScore(5);
+        }
+    }
+
+    public void RotateLastCardFistTime()
+    {
+        if (cards.Count > 0)
+        {
+            foreach (GameObject card in cards)
+                card.GetComponent<Card>().enabled = false;
+            cards[cards.Count - 1].GetComponent<Card>().enabled = true;
+            cards[cards.Count - 1].GetComponent<Card>().RotateCard();
         }
     }
 
     public void RemoveCard(GameObject card)
     {
+        Debug.Log("RemoveCard");
         cards.Remove(card);
         if (cards.Count == 0)
             gameObject.GetComponent<Collider2D>().enabled = true;
+        Card scriptCard = card.GetComponent<Card>();
+        if (scriptCard.ChildCard != null)
+        {//check if the card has child cards (cards that are above it)
+            RemoveChildCard(scriptCard.ChildCard);
+        }
+        if (scriptCard.FatherCard != null)
+        {//check if the card has father cards (cards that are below it)
+            scriptCard.FatherCard.GetComponent<Card>().ChildCard = null;
+        }
+        else
+        {
+            if (cards.Count > 0)
+                RotateLastCard();
+            else
+                gameObject.GetComponent<Collider2D>().enabled = true;
+        }
     }
+
+    /// <summary>
+    /// Function to remove every card above a removed card in a column
+    /// </summary>
+    /// <param name="childCard">card you want to remove</param>
+    private void RemoveChildCard(GameObject childCard)
+    {
+        cards.Remove(childCard);
+        Card scriptCard = childCard.GetComponent<Card>();
+        if (scriptCard.ChildCard != null)
+            RemoveChildCard(scriptCard.ChildCard);
+    } 
 }

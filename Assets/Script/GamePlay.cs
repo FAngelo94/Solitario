@@ -41,24 +41,24 @@ public class GamePlay:MonoBehaviour {
 
         if (card.GetComponent<Card>().Column != null)//User take a card from column
         {
-            if (tagCollision.Equals("PositionGoal"))
+            if (tagCollision.Equals("PositionGoal"))//put the card in a empty positionGoal
             {
                 FromColumnToPositionGoal();
                 newPositionIsValid = true;
             }
-            if (tagCollision.Equals("Column"))
+            if (tagCollision.Equals("Column"))//put the card in a empty column
             {
                 FromColumnToColumn();
                 newPositionIsValid = true;
             }
             if (tagCollision.Equals("Card"))
             {
-                if (newPosition.GetComponent<Card>().PositionGoal != null)
+                if (newPosition.GetComponent<Card>().PositionGoal != null)//put the card in a positionGoal with card
                 {
                     FromColumnToPositionGoalCard();
                     newPositionIsValid = true;
                 }
-                if (newPosition.GetComponent<Card>().Column!=null)
+                if (newPosition.GetComponent<Card>().Column!=null)//put the card in a column with card
                 {
                     FromColumnToColumnCard();
                     newPositionIsValid = true;
@@ -67,14 +67,14 @@ public class GamePlay:MonoBehaviour {
         }
         if (card.GetComponent<Card>().PositionGoal != null)//User take a card from positionGoal
         {
-            if (tagCollision.Equals("Column"))
+            if (tagCollision.Equals("Column"))//put the card in a empty column
             {
                 FromPositionGoalToColumn();
                 newPositionIsValid = true;
             }
             if (tagCollision.Equals("Card"))
             {
-                if (newPosition.GetComponent<Card>().Column != null)
+                if (newPosition.GetComponent<Card>().Column != null)//put the card in a column with card
                 {
                     FromPositionGoalToColumnCard();
                     newPositionIsValid = true;
@@ -87,21 +87,21 @@ public class GamePlay:MonoBehaviour {
             {
                 if (newPosition.GetComponent<Card>().PositionGoal != null)
                 {
-                    FromDeckToPositionGoalCard();
+                    FromDeckToPositionGoalCard();//put the card in a positionGoal with card
                     newPositionIsValid = true;
                 }
-                if (newPosition.GetComponent<Card>().Column != null)
+                if (newPosition.GetComponent<Card>().Column != null)//put the card in a column with card
                 {
                     FromDeckToColumnCard();
                     newPositionIsValid = true;
                 }
             }
-            if (tagCollision.Equals("PositionGoal"))
+            if (tagCollision.Equals("PositionGoal"))//put the card in a empty positionGoal
             {
                 FromDeckToPositionGoal();
                 newPositionIsValid = true;
             }
-            if (tagCollision.Equals("Column"))
+            if (tagCollision.Equals("Column"))//put the card in a empty column
             {
                 FromDeckToColumn();
                 newPositionIsValid = true;
@@ -109,7 +109,8 @@ public class GamePlay:MonoBehaviour {
         }
 
         if (!newPositionIsValid)
-        {
+        {//User put the card in a not valid position, so the card will
+            //be put in its original position
             card.GetComponent<Card>().SetOldOriginalPosition();
         }
     }
@@ -119,15 +120,21 @@ public class GamePlay:MonoBehaviour {
     /// </summary>
     private void FromColumnToPositionGoal()
     {
-        throw new NotImplementedException();
-    }
-
-    /// <summary>
-    /// User takes a card from Column and put it in a empty Column
-    /// </summary>
-    private void FromColumnToColumn()
-    {
-        throw new NotImplementedException();
+        Debug.Log("FromColumnToPositionGoal");
+        Card scriptCard = card.GetComponent<Card>();
+        PositionGoalCard scriptPosGoal = newPosition.GetComponent<PositionGoalCard>();
+        if (scriptCard.Value == 1 && scriptPosGoal.Seed.Equals(scriptCard.Seed))
+        {
+            //Remove the card from the column and set new position
+            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            scriptCard.Column.RemoveCard(card);
+            //Add the card to the position goal
+            newPosition.GetComponent<PositionGoalCard>().AddCard(card);
+            //Modify score and moves
+            ScoreAndMoves(10);
+        }
+        else
+            scriptCard.SetOldOriginalPosition();
     }
 
     /// <summary>
@@ -136,7 +143,49 @@ public class GamePlay:MonoBehaviour {
     /// </summary>
     private void FromColumnToPositionGoalCard()
     {
-        throw new NotImplementedException();
+        Debug.Log("FromColumnToPositionGoalCard");
+        Card scriptCard = card.GetComponent<Card>();
+        Card scriptBelowCard = newPosition.GetComponent<Card>();
+        if (scriptCard.Value == scriptBelowCard.Value + 1 && scriptCard.Seed.Equals(scriptBelowCard.Seed) && scriptCard.ChildCard==null)//check value, seed and if the card have child
+        {
+            //remove from column and add to the positionGoal
+            scriptCard.Column.RemoveCard(card);
+            scriptBelowCard.PositionGoal.AddCard(card);
+            //setup the position
+            Vector3 newPos = newPosition.transform.position;
+            newPos.z = card.transform.position.z;
+            scriptCard.SetNewOriginalPosition(newPos);
+            //Modify score and moves
+            ScoreAndMoves(10);
+        }
+        else
+            scriptCard.SetOldOriginalPosition();
+    }
+
+    /// <summary>
+    /// User takes a card from Column and put it in a empty Column
+    /// </summary>
+    private void FromColumnToColumn()
+    {
+        Debug.Log("FromColumnToColumn");
+        Card scriptCard = card.GetComponent<Card>();
+        if (scriptCard.Value == 13)
+        {
+            //Remove card frm the old column and put in the new empty column
+            scriptCard.Column.RemoveCard(card);
+            newPosition.GetComponent<Column>().AddSingleCard(card);
+            //Set new position
+            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            //Set child card
+            if (scriptCard.ChildCard != null)
+            {
+                FixedChildCards(card, scriptCard.ChildCard);
+            }
+            //Modify score and moves
+            ScoreAndMoves(0);
+        }
+        else
+            scriptCard.SetOldOriginalPosition();
     }
 
     /// <summary>
@@ -145,7 +194,48 @@ public class GamePlay:MonoBehaviour {
     /// </summary>
     private void FromColumnToColumnCard()
     {
-        throw new NotImplementedException();
+        Debug.Log("FromColumnToColumnCard");
+        Card scriptCard = card.GetComponent<Card>();
+        Card scriptBelowCard = newPosition.GetComponent<Card>();
+        if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null)//check value, seed and that card below doesn't have child
+        {
+            //Remove card frm the old column and put in the new empty column
+            scriptCard.Column.RemoveCard(card);
+            scriptBelowCard.Column.AddSingleCard(card);
+            //Set Position
+            Vector3 fatherPos = newPosition.transform.position;
+            fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
+            fatherPos.z = card.transform.position.z;
+            scriptCard.SetNewOriginalPosition(fatherPos);
+            //set parent relation
+            scriptCard.FatherCard = newPosition;
+            scriptBelowCard.ChildCard = card;
+            //Set child card
+            if (scriptCard.ChildCard != null)
+            {
+                FixedChildCards(card, scriptCard.ChildCard);
+            }
+            //Modify score and moves
+            ScoreAndMoves(0);
+        }
+        else
+            scriptCard.SetOldOriginalPosition();
+    }
+
+    private void FixedChildCards(GameObject father, GameObject child)
+    {
+        Card scriptFather = father.GetComponent<Card>();
+        Card scriptChild = child.GetComponent<Card>();
+        //add the child cards in the new column
+        scriptFather.Column.AddSingleCard(child);
+        //set the new position
+        Vector3 newPos = father.transform.position;
+        newPos.z -= 1;
+        newPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
+        scriptChild.SetNewOriginalPosition(newPos);
+        //check if the card has a child card
+        if (scriptChild.ChildCard != null)
+            FixedChildCards(child, scriptChild.ChildCard);
     }
 
     /// <summary>
@@ -154,12 +244,16 @@ public class GamePlay:MonoBehaviour {
     private void FromPositionGoalToColumn()
     {
         Card scriptCard = card.GetComponent<Card>();
+        Card scriptBelowCard = newPosition.GetComponent<Card>();
         if (scriptCard.Value == 13)
         {
+            //Remove card from positionGoam and add it to the column
             scriptCard.PositionGoal.RemoveCard();
             newPosition.GetComponent<Column>().AddSingleCard(card);
             //Set new position
             scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            //Modify score and moves
+            ScoreAndMoves(-15);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -174,9 +268,9 @@ public class GamePlay:MonoBehaviour {
         Debug.Log("FromPositionGoalToColumnCard");
         Card scriptCard = card.GetComponent<Card>();
         Card scriptBelowCard = newPosition.GetComponent<Card>();
-        if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed))//check value and seed
+        if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null)//check value, seed and that card below doesn't have child
         {
-            //remove from the positionGoal and add to the column
+            //remove from the positionGoal and add it to the column
             scriptCard.PositionGoal.RemoveCard();
             scriptBelowCard.Column.AddSingleCard(card);
             //setup the position
@@ -187,6 +281,8 @@ public class GamePlay:MonoBehaviour {
             //set parent relation
             scriptCard.FatherCard = newPosition;
             scriptBelowCard.ChildCard = card;
+            //Modify score and moves
+            ScoreAndMoves(-15);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -203,13 +299,15 @@ public class GamePlay:MonoBehaviour {
         Card scriptBelowCard = newPosition.GetComponent<Card>();
         if (scriptCard.Value == scriptBelowCard.Value + 1 && scriptCard.Seed.Equals(scriptBelowCard.Seed))//check value and seed
         {
-            //remove from deck and add to the column
+            //remove from deck and add it to the column
             scriptCard.Deck.RemoveLastCardFromWaste();
             scriptBelowCard.PositionGoal.AddCard(card);
             //setup the position
             Vector3 newPos = newPosition.transform.position;
             newPos.z = card.transform.position.z;
             scriptCard.SetNewOriginalPosition(newPos);
+            //Modify score and moves
+            ScoreAndMoves(10);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -223,9 +321,9 @@ public class GamePlay:MonoBehaviour {
         Debug.Log("FromDeckToColumnCard");
         Card scriptCard = card.GetComponent<Card>();
         Card scriptBelowCard = newPosition.GetComponent<Card>();
-        if(scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed,scriptBelowCard.Seed))//check value and seed
+        if(scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed,scriptBelowCard.Seed) && scriptBelowCard.ChildCard==null)//check value, seed and that card below doesn't have child
         {
-            //remove from deck and add to the column
+            //remove from deck and add it to the column
             scriptCard.Deck.RemoveLastCardFromWaste();
             scriptBelowCard.Column.AddSingleCard(card);
             //setup the position
@@ -236,6 +334,8 @@ public class GamePlay:MonoBehaviour {
             //set parent relation
             scriptCard.FatherCard = newPosition;
             scriptBelowCard.ChildCard = card;
+            //Modify score and moves
+            ScoreAndMoves(5);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -251,9 +351,13 @@ public class GamePlay:MonoBehaviour {
         PositionGoalCard scriptPosGoal = newPosition.GetComponent<PositionGoalCard>();
         if (scriptCard.Value == 1 && scriptPosGoal.Seed.Equals(scriptCard.Seed))
         {
+            //Remove the card from the deck and add it to the positionalGoal
             scriptCard.Deck.RemoveLastCardFromWaste();
-            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
             newPosition.GetComponent<PositionGoalCard>().AddCard(card);
+            //Set the new position
+            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            //Modify score and moves
+            ScoreAndMoves(10);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -268,9 +372,13 @@ public class GamePlay:MonoBehaviour {
         Card scriptCard = card.GetComponent<Card>();
         if (scriptCard.Value == 13)
         {
+            //Remove the card from the deck and add it to the empty column
             scriptCard.Deck.RemoveLastCardFromWaste();
-            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
             newPosition.GetComponent<Column>().AddSingleCard(card);
+            //set the new position
+            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            //Modify score and moves
+            ScoreAndMoves(5);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -289,5 +397,15 @@ public class GamePlay:MonoBehaviour {
         if ((s2.Equals("H") || s2.Equals("D")) && (s1.Equals("C") || s1.Equals("S")))
             return true;
         return false;
+    }
+
+    /// <summary>
+    /// Increment score and moves
+    /// </summary>
+    /// <param name="points">value that are sum or decrement to the score</param>
+    private void ScoreAndMoves(int points)
+    {
+        ScoreManager.instance.AddScore(points);
+        ScoreManager.instance.IncrementMoves();
     }
 }
