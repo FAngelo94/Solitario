@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Card : TouchManager  {
-
+    
     private string _seed;
     public string Seed
     {
@@ -155,7 +155,6 @@ public class Card : TouchManager  {
     protected override void SpritePressedMoved()
     {
         FollowFinger();
-        
     }
     protected override void SpritePressedStationary()
     {
@@ -226,7 +225,6 @@ public class Card : TouchManager  {
         }
         checkFollowCardDelay = true;
     }
-    
 
     public void SetNewOriginalPosition(Vector3 newPoint)
     {
@@ -270,6 +268,22 @@ public class Card : TouchManager  {
         _positionGoal = goal;
     }
 
+    public Card CopyCardClass()
+    {
+        Card copy = new Card
+        {
+            _column = _column,
+            _deck = _deck,
+            _positionGoal = _positionGoal,
+            _seed = _seed,
+            _value = _value,
+            originalPosition = originalPosition,
+            FatherCard = FatherCard,
+            ChildCard = ChildCard
+        };
+        return copy;
+    }
+
     //Methods for move and rotate the cards from the other classes
     public void TraslateCard(Vector3 point)
     {
@@ -277,17 +291,14 @@ public class Card : TouchManager  {
     }
     public void RotateCard()
     {
-        Debug.Log("RotateCard");
         managerMovement.RotateCard(gameObject);
     }
     public void RotateFrontCard()
     {
-        Debug.Log("RotateFrontCard");
         managerMovement.RotateFrontCard(gameObject);
     }
     public void RotateBackCard()
     {
-        Debug.Log("RotateBackCard");
         managerMovement.RotateBackCard(gameObject);
     }
 }

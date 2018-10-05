@@ -43,6 +43,7 @@ public class PositionGoalCard : MonoBehaviour {
 
     public void RemoveCard()
     {
+        Debug.Log("count=" + cards.Count + "-" + cards[cards.Count - 1].GetComponent<Card>().Value);
         cards.Remove(cards[cards.Count-1]);
         if(cards.Count>0)
             cards[cards.Count - 1].GetComponent<Collider2D>().enabled = true;

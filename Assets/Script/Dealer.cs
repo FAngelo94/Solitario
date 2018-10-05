@@ -91,6 +91,7 @@ public class Dealer : MonoBehaviour {
                 count++;
                 if (count > column)
                 {
+                    columns[column].GetComponent<Column>().RotateLastCardFistTime();
                     column++;
                     count = 0;
                 }
@@ -100,11 +101,6 @@ public class Dealer : MonoBehaviour {
                 PutCardInDeck(newCard);
         }
         finishSetUp = true;
-        foreach (GameObject col in columns)
-        {
-            Column script = col.GetComponent<Column>();
-            script.RotateLastCardFistTime();
-        }
         yield return null;
     }
 

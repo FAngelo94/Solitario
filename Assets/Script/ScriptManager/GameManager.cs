@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
     [SerializeField]
-    private float _cardMovementSpeed = 2;
+    private float _cardMovementSpeed = 50;
     public float CardMovementSpeed
     {
         get { return _cardMovementSpeed; }
@@ -24,6 +24,13 @@ public class GameManager : MonoBehaviour {
     public float OrizzontalSpaceBetweenCard
     {
         get { return _orizzontalSpaceBetweenCard; }
+    }
+
+    [SerializeField]
+    private float _cardMovementSpeedOnBack = 50;
+    public float CardMovementSpeedOnBack
+    {
+        get { return _cardMovementSpeedOnBack; }
     }
 
     // Use this for initialization

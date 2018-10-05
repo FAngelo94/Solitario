@@ -35,7 +35,6 @@ public class Column : MonoBehaviour {
         newPos.z = -cards.Count;
         newCard.transform.position = newPos;
         gameObject.GetComponent<Collider2D>().enabled = false;
-        newCard.GetComponent<Card>().enabled = false;
     }
 
     public bool SetUpCards()
@@ -63,7 +62,7 @@ public class Column : MonoBehaviour {
             foreach (GameObject card in cards)
                 card.GetComponent<Card>().enabled = false;
             cards[cards.Count - 1].GetComponent<Card>().enabled = true;
-            cards[cards.Count - 1].GetComponent<Card>().RotateCard();
+            cards[cards.Count - 1].GetComponent<Card>().RotateFrontCard();
             ScoreManager.instance.AddScore(5);
         }
     }
@@ -75,13 +74,12 @@ public class Column : MonoBehaviour {
             foreach (GameObject card in cards)
                 card.GetComponent<Card>().enabled = false;
             cards[cards.Count - 1].GetComponent<Card>().enabled = true;
-            cards[cards.Count - 1].GetComponent<Card>().RotateCard();
+            cards[cards.Count - 1].GetComponent<Card>().RotateFrontCard();
         }
     }
 
     public void RemoveCard(GameObject card)
     {
-        Debug.Log("RemoveCard");
         cards.Remove(card);
         if (cards.Count <= 0)
             gameObject.GetComponent<Collider2D>().enabled = true;
@@ -103,8 +101,30 @@ public class Column : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Method used in back operation when we move more cards
+    /// </summary>
+    /// <param name="card"></param>
+    public void RemoveCardChild(GameObject card)
+    {
+        cards.Remove(card);
+    }
+
     public int NumberOfCard()
     {
         return cards.Count;
+    }
+
+    public void HideLastCard()
+    {
+        
+        if (cards.Count >= 2)
+        {
+            GameObject card = cards[cards.Count - 2];
+            card.GetComponent<Card>().RotateBackCard();
+            card.GetComponent<Card>().enabled = false;
+        }
+        else
+            Debug.LogError("Problem");
     }
 }

@@ -125,6 +125,8 @@ public class GamePlay:MonoBehaviour {
         PositionGoalCard scriptPosGoal = newPosition.GetComponent<PositionGoalCard>();
         if (scriptCard.Value == 1 && scriptPosGoal.Seed.Equals(scriptCard.Seed))
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //Remove the card from the column and set new position
             scriptCard.SetNewOriginalPosition(newPosition.transform.position);
             scriptCard.Column.RemoveCard(card);
@@ -132,6 +134,9 @@ public class GamePlay:MonoBehaviour {
             newPosition.GetComponent<PositionGoalCard>().AddCard(card);
             //Modify score and moves
             ScoreAndMoves(10);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card,afterCardStatus, beforeCardStatus, 10);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -148,6 +153,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptBelowCard = newPosition.GetComponent<Card>();
         if (scriptCard.Value == scriptBelowCard.Value + 1 && scriptCard.Seed.Equals(scriptBelowCard.Seed) && scriptCard.ChildCard==null)//check value, seed and if the card have child
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //remove from column and add to the positionGoal
             scriptCard.Column.RemoveCard(card);
             scriptBelowCard.PositionGoal.AddCard(card);
@@ -157,6 +164,9 @@ public class GamePlay:MonoBehaviour {
             scriptCard.SetNewOriginalPosition(newPos);
             //Modify score and moves
             ScoreAndMoves(10);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, 10);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -171,6 +181,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptCard = card.GetComponent<Card>();
         if (scriptCard.Value == 13 && newPosition.GetComponent<Column>().NumberOfCard()==0)
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //Remove card frm the old column and put in the new empty column
             scriptCard.Column.RemoveCard(card);
             newPosition.GetComponent<Column>().AddSingleCard(card);
@@ -183,6 +195,9 @@ public class GamePlay:MonoBehaviour {
             }
             //Modify score and moves
             ScoreAndMoves(0);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, 0);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -199,6 +214,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptBelowCard = newPosition.GetComponent<Card>();
         if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null)//check value, seed and that card below doesn't have child
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //Remove card frm the old column and put in the new empty column
             scriptCard.Column.RemoveCard(card);
             scriptBelowCard.Column.AddSingleCard(card);
@@ -218,6 +235,9 @@ public class GamePlay:MonoBehaviour {
             }
             //Modify score and moves
             ScoreAndMoves(0);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, 0);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -248,6 +268,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptBelowCard = newPosition.GetComponent<Card>();
         if (scriptCard.Value == 13)
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //Remove card from positionGoam and add it to the column
             scriptCard.PositionGoal.RemoveCard();
             newPosition.GetComponent<Column>().AddSingleCard(card);
@@ -255,6 +277,9 @@ public class GamePlay:MonoBehaviour {
             scriptCard.SetNewOriginalPosition(newPosition.transform.position);
             //Modify score and moves
             ScoreAndMoves(-15);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, -15);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -271,6 +296,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptBelowCard = newPosition.GetComponent<Card>();
         if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null)//check value, seed and that card below doesn't have child
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //remove from the positionGoal and add it to the column
             scriptCard.PositionGoal.RemoveCard();
             scriptBelowCard.Column.AddSingleCard(card);
@@ -285,6 +312,9 @@ public class GamePlay:MonoBehaviour {
             scriptBelowCard.ChildCard = card;
             //Modify score and moves
             ScoreAndMoves(-15);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, -15);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -301,6 +331,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptBelowCard = newPosition.GetComponent<Card>();
         if (scriptCard.Value == scriptBelowCard.Value + 1 && scriptCard.Seed.Equals(scriptBelowCard.Seed))//check value and seed
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //remove from deck and add it to the column
             scriptCard.Deck.RemoveLastCardFromWaste();
             scriptBelowCard.PositionGoal.AddCard(card);
@@ -310,6 +342,9 @@ public class GamePlay:MonoBehaviour {
             scriptCard.SetNewOriginalPosition(newPos);
             //Modify score and moves
             ScoreAndMoves(10);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, 10);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -325,6 +360,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptBelowCard = newPosition.GetComponent<Card>();
         if(scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed,scriptBelowCard.Seed) && scriptBelowCard.ChildCard==null)//check value, seed and that card below doesn't have child
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //remove from deck and add it to the column
             scriptCard.Deck.RemoveLastCardFromWaste();
             scriptBelowCard.Column.AddSingleCard(card);
@@ -339,6 +376,9 @@ public class GamePlay:MonoBehaviour {
             scriptBelowCard.ChildCard = card;
             //Modify score and moves
             ScoreAndMoves(5);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, 5);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -354,6 +394,8 @@ public class GamePlay:MonoBehaviour {
         PositionGoalCard scriptPosGoal = newPosition.GetComponent<PositionGoalCard>();
         if (scriptCard.Value == 1 && scriptPosGoal.Seed.Equals(scriptCard.Seed))
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //Remove the card from the deck and add it to the positionalGoal
             scriptCard.Deck.RemoveLastCardFromWaste();
             newPosition.GetComponent<PositionGoalCard>().AddCard(card);
@@ -361,6 +403,9 @@ public class GamePlay:MonoBehaviour {
             scriptCard.SetNewOriginalPosition(newPosition.transform.position);
             //Modify score and moves
             ScoreAndMoves(10);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, 10);
         }
         else
             scriptCard.SetOldOriginalPosition();
@@ -375,6 +420,8 @@ public class GamePlay:MonoBehaviour {
         Card scriptCard = card.GetComponent<Card>();
         if (scriptCard.Value == 13)
         {
+            //Save the state of card before change it
+            Card beforeCardStatus = scriptCard.CopyCardClass();
             //Remove the card from the deck and add it to the empty column
             scriptCard.Deck.RemoveLastCardFromWaste();
             newPosition.GetComponent<Column>().AddSingleCard(card);
@@ -382,6 +429,9 @@ public class GamePlay:MonoBehaviour {
             scriptCard.SetNewOriginalPosition(newPosition.transform.position);
             //Modify score and moves
             ScoreAndMoves(5);
+            //Save the move
+            Card afterCardStatus = scriptCard.CopyCardClass();
+            BackManager.instance.SaveMove(card, afterCardStatus, beforeCardStatus, 5);
         }
         else
             scriptCard.SetOldOriginalPosition();
