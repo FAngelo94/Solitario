@@ -46,9 +46,10 @@ public class Deck : TouchManager
                 newPoint.x -= GameManager.instance.OrizzontalSpaceBetweenCard * count;
                 newPoint.z = card.transform.position.z;
                 card.GetComponent<Card>().TraslateCard(newPoint);
-                card.GetComponent<Card>().RotateFrontCard();
                 if (!card.transform.position.Equals(newPoint))
                     checkMoveCard = true;//we need move card because it doesn't reach the new point
+                else
+                    card.GetComponent<Card>().RotateFrontCard();
             }
             count--;
             index++;

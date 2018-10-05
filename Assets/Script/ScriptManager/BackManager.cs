@@ -4,13 +4,36 @@ using UnityEngine;
 
 public class BackManager : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    public static BackManager instance;
+
+    private List<SaveMoves> movesSaved = new List<SaveMoves>();
+
+    private void Start()
+    {
+        if (instance == null)
+            instance = this;
+    }
+
+    public void BackMove()
+    {
+
+    }
+
+    public void SaveMove(GameObject card, GameObject oldPosition, int points)
+    {
+        SaveMoves save = new SaveMoves
+        {
+            card = card,
+            oldPosition = oldPosition,
+            points = points
+        };
+        movesSaved.Add(save);
+    }
+
+    private struct SaveMoves
+    {
+        public GameObject card;
+        public GameObject oldPosition;
+        public int points;
+    }	
 }
