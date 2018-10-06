@@ -131,6 +131,10 @@ public class Deck : TouchManager
         }
     }
 
+    /// <summary>
+    /// Method to put a card from deck to the waste
+    /// </summary>
+    /// <param name="saveMove">If True user want a card and then the method save the move</param>
     private void TakeACard(bool saveMove)
     {
         if (deckCards.Count > 0)
@@ -169,6 +173,10 @@ public class Deck : TouchManager
         }
     }
 
+    /// <summary>
+    /// When all cards are in the waste and user press deck this method put all
+    /// the cards again in the deck
+    /// </summary>
     private void ResetDeck()
     {
         if (wasteCards.Count > 0)
@@ -186,6 +194,10 @@ public class Deck : TouchManager
     }
 
     //Public method
+    /// <summary>
+    /// Add single card to the deck
+    /// </summary>
+    /// <param name="newCard"></param>
     public void AddSingleCard(GameObject newCard)
     {
         deckCards.Add(newCard);
@@ -194,6 +206,10 @@ public class Deck : TouchManager
         newCard.SetActive(false);
     }
 
+    /// <summary>
+    /// Remove the last card from the waste when user take it and put
+    /// in an other place
+    /// </summary>
     public void RemoveLastCardFromWaste()
     {
         Debug.Log("RemoveLastCardFromWaste");
@@ -213,7 +229,7 @@ public class Deck : TouchManager
     /// <summary>
     /// Method uses when user undo a deck taken
     /// </summary>
-    public void UndoTake()
+    public bool UndoTake()
     {
         if (wasteCards.Count > 0)
         {
@@ -235,14 +251,12 @@ public class Deck : TouchManager
             //active last card in waste if there
             if (wasteCards.Count > 0)
                 wasteCards[wasteCards.Count - 1].GetComponent<Card>().enabled = true;
+            return false;
         }
         else
         {//Put all the card in waste
             int count = deckCards.Count;
             for (int i = 0; i < count; i++)
-                if (i == 0)
-                    TakeACard(true);
-                else
                     TakeACard(false);
            if(pastScore.Count>0)
             {
@@ -250,6 +264,7 @@ public class Deck : TouchManager
                 pastScore[pastScore.Count - 1] = -1;
                 pastScore.RemoveAll(x => x==-1);
             }
+            return true;
         }
     }
 
@@ -271,11 +286,23 @@ public class Deck : TouchManager
     }
 
     /// <summary>
-    /// 
     /// </summary>
     /// <returns>Number of cards remain in deck or waste</returns>
     public int NumberOfCardInDeck()
     {
         return deckCards.Count + wasteCards.Count;
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <returns>The Card script of the active card in the waste</returns>
+    public List<GameObject> GetActiveCardFromWaste()
+    {
+        List<GameObject> allDeckCards = new List<GameObject>();
+        allDeckCards.AddRange(deckCards);
+        allDeckCards.AddRange(wasteCards);
+        if (wasteCards.Count > 0)
+            return allDeckCards;
+        return null;
     }
 }

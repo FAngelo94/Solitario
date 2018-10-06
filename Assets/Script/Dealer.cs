@@ -61,8 +61,7 @@ public class Dealer : MonoBehaviour {
                 if (script.SetUpCards())
                     needMove = true;
             }
-            setCardPosition = !finishSetUp?true:needMove;
-            
+            setCardPosition = !finishSetUp?true:needMove;            
         }
     }
 
@@ -95,12 +94,13 @@ public class Dealer : MonoBehaviour {
                     column++;
                     count = 0;
                 }
-                yield return new WaitForSeconds(0.2f);
+                yield return new WaitForSeconds(0.1f);
             }
             else
                 PutCardInDeck(newCard);
         }
         finishSetUp = true;
+        GameManager.instance.StartGame();
         yield return null;
     }
 

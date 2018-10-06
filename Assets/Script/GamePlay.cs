@@ -38,7 +38,7 @@ public class GamePlay:MonoBehaviour {
     {
         if (instance == null)
             instance = this;
-        FindColumnsAndGoalPositions();
+        FindColumns();
     }
 
     private void Update()
@@ -51,15 +51,19 @@ public class GamePlay:MonoBehaviour {
                 {//card "i" reaches its final position
                     cardsInMovement[i].GetComponent<Card>().SetNewOriginalPosition(finalPositions[i]);
                     finalPositions[i] = new Vector3(-100, -100, -100);
+                    if (cardsInMovement[i].GetComponent<Card>().ChildCard != null)
+                    {
+                        FixedChildCardsMovements(cardsInMovement[i], cardsInMovement[i].GetComponent<Card>().ChildCard);
+                    }
                     cardsInMovement[i] = null;
                 }
                 else
                 {//card "i" doesn't reach its final position
                     cardsInMovement[i].GetComponent<Card>().TraslateCard(finalPositions[i]);
-                }
-                if (cardsInMovement[i] != null && cardsInMovement[i].GetComponent<Card>().ChildCard != null)
-                {
-                    FixedChildCardsMovements(cardsInMovement[i], cardsInMovement[i].GetComponent<Card>().ChildCard);
+                    if (cardsInMovement[i].GetComponent<Card>().ChildCard != null)
+                    {
+                        FixedChildCardsMovements(cardsInMovement[i], cardsInMovement[i].GetComponent<Card>().ChildCard);
+                    }
                 }
             }
             //remove null gameobject and the finalposition associated
@@ -179,7 +183,7 @@ public class GamePlay:MonoBehaviour {
             card.GetComponent<Card>().SetOldOriginalPosition();
         }
     }
-    private void FindColumnsAndGoalPositions()
+    private void FindColumns()
     {
         columns = new List<GameObject>();
         for (int i = 0; i < 7; i++)
@@ -380,6 +384,12 @@ public class GamePlay:MonoBehaviour {
         else
             scriptCard.SetOldOriginalPosition();
     }
+    /// <summary>
+    /// Method that modify the child when user move a list of cards between 2 column
+    /// remove the child from the old column and add them to the new
+    /// </summary>
+    /// <param name="father"></param>
+    /// <param name="child"></param>
     private void FixedChildCards(GameObject father, GameObject child)
     {
         Card scriptFather = father.GetComponent<Card>();
@@ -391,6 +401,12 @@ public class GamePlay:MonoBehaviour {
             FixedChildCards(child, scriptChild.ChildCard);
 
     }
+    /// <summary>
+    /// Method that modify only the position of the child when user move a list 
+    /// of cards between 2 column
+    /// </summary>
+    /// <param name="father"></param>
+    /// <param name="child"></param>
     private void FixedChildCardsMovements(GameObject father, GameObject child)
     {
         Card scriptChild = child.GetComponent<Card>();

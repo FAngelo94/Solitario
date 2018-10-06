@@ -46,16 +46,24 @@ public class GameManager : MonoBehaviour {
         get { return _runningGame; }
     }
 
-    // Use this for initialization
-    void Start () {
+    private void Awake()
+    {
         if (instance == null)
             instance = this;
-        DontDestroyOnLoad(this);
-        _runningGame = true;
+        _runningGame = false;
+    }
+
+    // Use this for initialization
+    void Start () {
+        
 	}
 
     public void FinishGame()
     {
         _runningGame = false;
+    }
+    public void StartGame()
+    {
+        _runningGame = true;
     }
 }

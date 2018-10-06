@@ -270,7 +270,11 @@ public class BackManager : TouchManager {
     private void FromDeckToDeck(MoveSaved lastMove)
     {
         Debug.Log("FromDeckToDeck");
-        lastMove.cardAfter.Deck.UndoTake();
+        bool undoResetDeck = lastMove.cardAfter.Deck.UndoTake();
+        if(undoResetDeck)
+        {
+            SaveMove(lastMove.card, lastMove.cardAfter, lastMove.cardBefore, lastMove.points);
+        }
     }
 
     /// <summary>

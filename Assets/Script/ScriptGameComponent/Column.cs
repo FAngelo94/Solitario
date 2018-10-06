@@ -17,7 +17,6 @@ public class Column : MonoBehaviour {
     /// <param name="newCard">new card</param>
     public void AddSingleCard(GameObject newCard)
     {
-        Debug.Log("AddSingleCard=" + newCard.GetComponent<Card>().Value);
         newCard.GetComponent<Card>().SetColumn(this);
         cards.Add(newCard);
         Vector3 newPos = newCard.transform.position;
