@@ -12,6 +12,19 @@ public class GamePlay:MonoBehaviour {
 
     public static GamePlay instance;
 
+    [Header("Deck")]
+    [SerializeField]
+    private GameObject Deck;
+
+    [Header("Position")]
+    [SerializeField]
+    private GameObject PositionGoalObject;
+
+    [Header("TableColumns")]
+    [SerializeField]
+    private GameObject TableObject;
+    private List<GameObject> columns;
+
     /// <summary>
     /// Card the player want to move
     /// </summary>
@@ -24,12 +37,49 @@ public class GamePlay:MonoBehaviour {
     /// </summary>
     private GameObject newPosition;
 
+    private List<GameObject> cardsInMovement;
+    private List<Vector3> finalPositions;
+
+    private void Awake()
+    {
+        cardsInMovement = new List<GameObject>();
+        finalPositions = new List<Vector3>();
+    }
+
     private void Start()
     {
         if (instance == null)
             instance = this;
+        FindColumnsAndGoalPositions();
     }
 
+    private void Update()
+    {
+        if (cardsInMovement.Count > 0)
+        {
+            for (int i = 0; i < cardsInMovement.Count; i++)
+            {
+                if (cardsInMovement[i].transform.position.Equals(finalPositions[i]))
+                {//card "i" reaches its final position
+                    cardsInMovement[i].GetComponent<Card>().SetNewOriginalPosition(finalPositions[i]);
+                    finalPositions[i] = new Vector3(-100, -100, -100);
+                    cardsInMovement[i] = null;
+                }
+                else
+                {//card "i" doesn't reach its final position
+                    cardsInMovement[i].GetComponent<Card>().TraslateCard(finalPositions[i]);
+                }
+                if (cardsInMovement[i] != null && cardsInMovement[i].GetComponent<Card>().ChildCard != null)
+                {
+                    FixedChildCardsMovements(cardsInMovement[i], cardsInMovement[i].GetComponent<Card>().ChildCard);
+                }
+            }
+            //remove null gameobject and the finalposition associated
+            cardsInMovement.RemoveAll(x => x == null);
+            finalPositions.RemoveAll(x => x == new Vector3(-100, -100, -100));
+
+        }
+    }
 
     public void WhereIsCard(GameObject card, Collider2D collision)
     {
@@ -115,6 +165,115 @@ public class GamePlay:MonoBehaviour {
         }
     }
 
+    public void DoubleTapManage(GameObject card)
+    {
+        bool newPositionIsValid = false;
+        if (card.GetComponent<Card>().Column != null)//User double click a card that is in a column
+        {     
+            if (CheckPositionGoalAvaiable(card))
+                newPositionIsValid = true;
+        }
+        if (card.GetComponent<Card>().Deck != null)//User double click a card that is in the deck
+        {
+            if (CheckPositionGoalAvaiable(card))
+                newPositionIsValid = true;
+            else
+            {
+                if(CheckColumnAvailable(card))
+                {
+                    newPositionIsValid = true;
+                }
+            }
+
+        }
+        if (!newPositionIsValid)
+        {//User put the card in a not valid position, so the card will
+            //be put in its original position
+            card.GetComponent<Card>().SetOldOriginalPosition();
+        }
+    }
+    private void FindColumnsAndGoalPositions()
+    {
+        columns = new List<GameObject>();
+        for (int i = 0; i < 7; i++)
+        {
+            string nameColumn = "Column_" + i;
+            columns.Add(TableObject.transform.Find(nameColumn).gameObject);
+        }
+    }
+    private bool CheckPositionGoalAvaiable(GameObject card)
+    {
+        string seed = card.GetComponent<Card>().Seed;
+        int value = card.GetComponent<Card>().Value;
+        GameObject positionGoal = null;
+        switch (seed)
+        {
+            case "H":
+                positionGoal = PositionGoalObject.transform.Find("PositionHearts").gameObject;
+                break;
+            case "D":
+                positionGoal = PositionGoalObject.transform.Find("PositionDiamonds").gameObject;
+                break;
+            case "C":
+                positionGoal = PositionGoalObject.transform.Find("PositionClubs").gameObject;
+                break;
+            case "S":
+                positionGoal = PositionGoalObject.transform.Find("PositionSpades").gameObject;
+                break;
+        }
+        Card lastCard = positionGoal.GetComponent<PositionGoalCard>().GetLastCard();
+        if (lastCard != null && lastCard.Value == value - 1)
+        {
+            this.card = card;
+            newPosition = lastCard.gameObject;
+            if (card.GetComponent<Card>().Column != null)
+                FromColumnToPositionGoalCard();
+            else
+                FromDeckToPositionGoalCard();
+            return true;
+        }
+        if (lastCard == null && value == 1)
+        {
+            this.card = card;
+            newPosition = positionGoal;
+            if (card.GetComponent<Card>().Column != null)
+                FromColumnToPositionGoal();
+            else
+                FromDeckToPositionGoal();
+            return true;
+        }
+        return false;
+    }
+    private bool CheckColumnAvailable(GameObject card)
+    {
+        string seed = card.GetComponent<Card>().Seed;
+        int value = card.GetComponent<Card>().Value;
+        foreach(GameObject column in columns)
+        {
+            Card lastCard = column.GetComponent<Column>().GetLastCard();
+            if(lastCard!=null)
+            {
+                if (CheckSeedInColumn(seed, lastCard.Seed) && value == lastCard.Value - 1)
+                {
+                    this.card = card;
+                    newPosition = lastCard.gameObject;
+                    FromDeckToColumnCard();
+                    return true;
+                }
+            }
+            else
+            {
+                if(value==13)
+                {
+                    this.card = card;
+                    newPosition = column;
+                    FromDeckToColumn();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     /// <summary>
     /// User takes a card from Column and put it in the empty PositionGoal
     /// </summary>
@@ -128,7 +287,7 @@ public class GamePlay:MonoBehaviour {
             //Save the state of card before change it
             Card beforeCardStatus = scriptCard.CopyCardClass();
             //Remove the card from the column and set new position
-            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            AddNewCardMovement(newPosition.transform.position);
             scriptCard.Column.RemoveCard(card);
             //Add the card to the position goal
             newPosition.GetComponent<PositionGoalCard>().AddCard(card);
@@ -161,7 +320,7 @@ public class GamePlay:MonoBehaviour {
             //setup the position
             Vector3 newPos = newPosition.transform.position;
             newPos.z = card.transform.position.z;
-            scriptCard.SetNewOriginalPosition(newPos);
+            AddNewCardMovement(newPos);
             //Modify score and moves
             ScoreAndMoves(10);
             //Save the move
@@ -187,7 +346,7 @@ public class GamePlay:MonoBehaviour {
             scriptCard.Column.RemoveCard(card);
             newPosition.GetComponent<Column>().AddSingleCard(card);
             //Set new position
-            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            AddNewCardMovement(newPosition.transform.position);
             //Set child card
             if (scriptCard.ChildCard != null)
             {
@@ -212,7 +371,7 @@ public class GamePlay:MonoBehaviour {
         Debug.Log("FromColumnToColumnCard");
         Card scriptCard = card.GetComponent<Card>();
         Card scriptBelowCard = newPosition.GetComponent<Card>();
-        
+
         if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null && scriptBelowCard.GetRotateCard() == 1)//check value, seed and that card below doesn't have child and it isn't hide
         {
             //Save the state of card before change it
@@ -224,8 +383,7 @@ public class GamePlay:MonoBehaviour {
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
             fatherPos.z = -scriptCard.Column.NumberOfCard();
-            scriptCard.SetNewOriginalPosition(fatherPos);
-            
+            AddNewCardMovement(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;
             scriptBelowCard.ChildCard = card;
@@ -243,13 +401,18 @@ public class GamePlay:MonoBehaviour {
         else
             scriptCard.SetOldOriginalPosition();
     }
-
     private void FixedChildCards(GameObject father, GameObject child)
     {
         Card scriptFather = father.GetComponent<Card>();
-        Card scriptChild = child.GetComponent<Card>();
         //add the child cards in the new column
         scriptFather.Column.AddSingleCard(child);
+        //set the movement of child cards
+        FixedChildCardsMovements(father, child);
+        
+    }
+    private void FixedChildCardsMovements(GameObject father, GameObject child)
+    {
+        Card scriptChild = child.GetComponent<Card>();
         //set the new position
         Vector3 newPos = father.transform.position;
         newPos.z -= 1;
@@ -275,7 +438,7 @@ public class GamePlay:MonoBehaviour {
             scriptCard.PositionGoal.RemoveCard();
             newPosition.GetComponent<Column>().AddSingleCard(card);
             //Set new position
-            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            AddNewCardMovement(newPosition.transform.position);
             //Modify score and moves
             ScoreAndMoves(-15);
             //Save the move
@@ -307,7 +470,7 @@ public class GamePlay:MonoBehaviour {
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
             fatherPos.z = -scriptCard.Column.NumberOfCard();
-            scriptCard.SetNewOriginalPosition(fatherPos);
+            AddNewCardMovement(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;
             scriptBelowCard.ChildCard = card;
@@ -340,7 +503,7 @@ public class GamePlay:MonoBehaviour {
             //setup the position
             Vector3 newPos = newPosition.transform.position;
             newPos.z = card.transform.position.z;
-            scriptCard.SetNewOriginalPosition(newPos);
+            AddNewCardMovement(newPos);
             //Modify score and moves
             ScoreAndMoves(10);
             //Save the move
@@ -370,7 +533,7 @@ public class GamePlay:MonoBehaviour {
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
             fatherPos.z = -scriptCard.Column.NumberOfCard();
-            scriptCard.SetNewOriginalPosition(fatherPos);
+            AddNewCardMovement(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;
             scriptBelowCard.ChildCard = card;
@@ -400,7 +563,7 @@ public class GamePlay:MonoBehaviour {
             scriptCard.Deck.RemoveLastCardFromWaste();
             newPosition.GetComponent<PositionGoalCard>().AddCard(card);
             //Set the new position
-            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            AddNewCardMovement(newPosition.transform.position);
             //Modify score and moves
             ScoreAndMoves(10);
             //Save the move
@@ -426,7 +589,7 @@ public class GamePlay:MonoBehaviour {
             scriptCard.Deck.RemoveLastCardFromWaste();
             newPosition.GetComponent<Column>().AddSingleCard(card);
             //set the new position
-            scriptCard.SetNewOriginalPosition(newPosition.transform.position);
+            AddNewCardMovement(newPosition.transform.position);
             //Modify score and moves
             ScoreAndMoves(5);
             //Save the move
@@ -460,5 +623,35 @@ public class GamePlay:MonoBehaviour {
     {
         ScoreManager.instance.AddScore(points);
         ScoreManager.instance.IncrementMoves();
+    }
+
+    private void AddNewCardMovement(Vector3 point)
+    {
+        cardsInMovement.Add(card);
+        finalPositions.Add(point);
+    }
+
+    /// <summary>
+    /// After every move check if all the card not in positionalGoal
+    /// are order in 4 column and, if it is so, put them automatically in the
+    /// positionGoal
+    /// </summary>
+    private void CheckAutomaticFinish()
+    {
+        if(Deck.GetComponent<Deck>().NumberOfCardInDeck()==0)
+        {//deck is empty, check if we have only 4 column not empty
+            int countNotEmptyCol = 0;
+            foreach (GameObject column in columns)
+            {
+                if (column.GetComponent<Column>().NumberOfCard() > 0)
+                    countNotEmptyCol++;
+            }
+            if (countNotEmptyCol <= 4)
+                AutomaticFinish();
+        }
+    }
+    private void AutomaticFinish()
+    {
+        Debug.Log("AutomaticFinish");
     }
 }

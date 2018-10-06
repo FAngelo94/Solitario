@@ -50,4 +50,11 @@ public class PositionGoalCard : MonoBehaviour {
         else
             gameObject.GetComponent<Collider2D>().enabled = true;
     }
+
+    public Card GetLastCard()
+    {
+        if (cards.Count > 0)
+            return cards[cards.Count - 1].GetComponent<Card>();
+        return null;
+    }
 }

@@ -34,7 +34,7 @@ public class Dealer : MonoBehaviour {
     private GameObject BasicCard;
 
     private List<string> seeds = new List<string> { "H", "D", "C", "S" };
-    private int[] values = { 3,3,2,2,2,1,1,1 };
+    private int[] values = { 1,2,3,4,5,6,7,8,9,10,11,12,13 };
 
     private bool setCardPosition;
     private bool finishSetUp;
@@ -125,13 +125,13 @@ public class Dealer : MonoBehaviour {
                 couplesOfValue.Add(new string[] { value+"", seed });
             }
         }
-        /*for (int i = 0; i < couplesOfValue.Count; i++)
+        for (int i = 0; i < couplesOfValue.Count; i++)
         {
             int r = Random.Range(0, couplesOfValue.Count);
             string[] tmp = couplesOfValue[r];
             couplesOfValue[r] = couplesOfValue[i];
             couplesOfValue[i] = tmp;
-        }*/
+        }
         return couplesOfValue;
     }
 

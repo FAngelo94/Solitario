@@ -45,7 +45,19 @@ public class Deck : TouchManager
             checkUndoMove = false;
             MoveUndoCards();
         }
+    }
 
+    protected override void SpritePressedBegan()
+    {
+        if (myCollider == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position)))
+        {
+            if (deckCards.Count > 0)
+                TakeACard(true);
+            else
+                ResetDeck();
+            if (deckCards.Count + wasteCards.Count != 0)
+                ScoreManager.instance.IncrementMoves();
+        }
     }
 
     /// <summary>
@@ -116,19 +128,6 @@ public class Deck : TouchManager
                 else
                     deckCard.SetActive(false);
             }
-        }
-    }
-
-    protected override void SpritePressedBegan()
-    {
-        if (myCollider == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position)))
-        {
-            if (deckCards.Count > 0)
-                TakeACard(true);
-            else
-                ResetDeck();
-            if (deckCards.Count + wasteCards.Count != 0)
-                ScoreManager.instance.IncrementMoves();
         }
     }
 
@@ -269,5 +268,14 @@ public class Deck : TouchManager
             wasteCards[wasteCards.Count - 2].GetComponent<Card>().enabled = false;
         //start the transition of card
         checkMoveCard = true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>Number of cards remain in deck or waste</returns>
+    public int NumberOfCardInDeck()
+    {
+        return deckCards.Count + wasteCards.Count;
     }
 }

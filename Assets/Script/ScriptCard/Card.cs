@@ -126,6 +126,7 @@ public class Card : TouchManager  {
             if (Time.time - checkDoubleClick <= GameManager.instance.DelayFromDoubleClick)
             {
                 Debug.Log("Double click");
+                GamePlay.instance.DoubleTapManage(gameObject);
             }
             else
             {
@@ -239,13 +240,11 @@ public class Card : TouchManager  {
 
     public void SetNewOriginalPosition(Vector3 newPoint)
     {
-        Debug.Log("SET NEW POSITION="+newPoint);
         originalPosition = newPoint;
         transform.position = new Vector3(originalPosition.x, originalPosition.y, originalPosition.z);
     }
     public void SetOldOriginalPosition()
     {
-        Debug.Log("SET OLD POSITION="+originalPosition);
         transform.position = new Vector3(originalPosition.x,originalPosition.y,originalPosition.z);
         IEnumerator setupChildren = SetOldOriginalPositionDelay();
         StartCoroutine(setupChildren);

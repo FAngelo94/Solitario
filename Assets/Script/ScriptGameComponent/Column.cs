@@ -12,23 +12,12 @@ public class Column : MonoBehaviour {
     }
 
     /// <summary>
-    /// Function to remove every card above a removed card in a column
-    /// </summary>
-    /// <param name="childCard">card you want to remove</param>
-    private void RemoveChildCard(GameObject childCard)
-    {
-        cards.Remove(childCard);
-        Card scriptCard = childCard.GetComponent<Card>();
-        if (scriptCard.ChildCard != null)
-            RemoveChildCard(scriptCard.ChildCard);
-    }
-
-    /// <summary>
     /// Add a new card and change its Z position
     /// </summary>
     /// <param name="newCard">new card</param>
     public void AddSingleCard(GameObject newCard)
     {
+        Debug.Log("AddSingleCard=" + newCard.GetComponent<Card>().Value);
         newCard.GetComponent<Card>().SetColumn(this);
         cards.Add(newCard);
         Vector3 newPos = newCard.transform.position;
@@ -63,6 +52,7 @@ public class Column : MonoBehaviour {
                 card.GetComponent<Card>().enabled = false;
             cards[cards.Count - 1].GetComponent<Card>().enabled = true;
             cards[cards.Count - 1].GetComponent<Card>().RotateFrontCard();
+            Debug.Log("Rotate last card=" + cards[cards.Count - 1].GetComponent<Card>().Seed + "-" + cards[cards.Count - 1].GetComponent<Card>().Value);
             ScoreManager.instance.AddScore(5);
         }
     }
@@ -80,6 +70,7 @@ public class Column : MonoBehaviour {
 
     public void RemoveCard(GameObject card)
     {
+        Debug.Log("Column count before=" + cards.Count);
         cards.Remove(card);
         if (cards.Count <= 0)
             gameObject.GetComponent<Collider2D>().enabled = true;
@@ -99,6 +90,20 @@ public class Column : MonoBehaviour {
             else
                 gameObject.GetComponent<Collider2D>().enabled = true;
         }
+        Debug.Log("Column count after=" + cards.Count);
+    }
+
+    /// <summary>
+    /// Function to remove every card above a removed card in a column
+    /// </summary>
+    /// <param name="childCard">card you want to remove</param>
+    private void RemoveChildCard(GameObject childCard)
+    {
+        cards.Remove(childCard);
+        Card scriptCard = childCard.GetComponent<Card>();
+        Debug.Log("Remove child="+scriptCard.Value);
+        if (scriptCard.ChildCard != null)
+            RemoveChildCard(scriptCard.ChildCard);
     }
 
     /// <summary>
@@ -126,5 +131,12 @@ public class Column : MonoBehaviour {
         }
         else
             Debug.LogError("Problem");
+    }
+
+    public Card GetLastCard()
+    {
+        if (cards.Count > 0)
+            return cards[cards.Count - 1].GetComponent<Card>();
+        return null;
     }
 }
