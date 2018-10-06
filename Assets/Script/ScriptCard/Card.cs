@@ -228,12 +228,25 @@ public class Card : TouchManager  {
 
     public void SetNewOriginalPosition(Vector3 newPoint)
     {
+        Debug.Log("SET NEW POSITION="+newPoint);
         originalPosition = newPoint;
-        transform.position = originalPosition;
+        transform.position = new Vector3(originalPosition.x, originalPosition.y, originalPosition.z);
     }
     public void SetOldOriginalPosition()
     {
-        transform.position = originalPosition;
+        Debug.Log("SET OLD POSITION="+originalPosition);
+        transform.position = new Vector3(originalPosition.x,originalPosition.y,originalPosition.z);
+        IEnumerator setupChildren = SetOldOriginalPositionDelay();
+        StartCoroutine(setupChildren);
+    }
+    /// <summary>
+    /// I need to wait before to set the original position of child because maybe they are moving
+    /// in order to follow the father
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator SetOldOriginalPositionDelay()
+    {
+        yield return new WaitForSeconds(0.01f);
         if (ChildCard != null)
             ChildCard.GetComponent<Card>().SetOldOriginalPosition();
     }
@@ -289,9 +302,9 @@ public class Card : TouchManager  {
     {
         managerMovement.TranslateCard(gameObject, point);
     }
-    public void RotateCard()
+    public int GetRotateCard()
     {
-        managerMovement.RotateCard(gameObject);
+        return gameObject.GetComponent<Animator>().GetInteger("Rotation");
     }
     public void RotateFrontCard()
     {

@@ -212,7 +212,8 @@ public class GamePlay:MonoBehaviour {
         Debug.Log("FromColumnToColumnCard");
         Card scriptCard = card.GetComponent<Card>();
         Card scriptBelowCard = newPosition.GetComponent<Card>();
-        if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null)//check value, seed and that card below doesn't have child
+        
+        if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null && scriptBelowCard.GetRotateCard() == 1)//check value, seed and that card below doesn't have child and it isn't hide
         {
             //Save the state of card before change it
             Card beforeCardStatus = scriptCard.CopyCardClass();
@@ -222,9 +223,9 @@ public class GamePlay:MonoBehaviour {
             //Set Position
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
-            //fatherPos.z = card.transform.position.z;
-            fatherPos.z -= 1;
+            fatherPos.z = -scriptCard.Column.NumberOfCard();
             scriptCard.SetNewOriginalPosition(fatherPos);
+            
             //set parent relation
             scriptCard.FatherCard = newPosition;
             scriptBelowCard.ChildCard = card;
@@ -294,7 +295,8 @@ public class GamePlay:MonoBehaviour {
         Debug.Log("FromPositionGoalToColumnCard");
         Card scriptCard = card.GetComponent<Card>();
         Card scriptBelowCard = newPosition.GetComponent<Card>();
-        if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null)//check value, seed and that card below doesn't have child
+
+        if (scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed, scriptBelowCard.Seed) && scriptBelowCard.ChildCard == null && scriptBelowCard.GetRotateCard() == 1)//check value, seed and that card below doesn't have child and it isn't hide
         {
             //Save the state of card before change it
             Card beforeCardStatus = scriptCard.CopyCardClass();
@@ -304,8 +306,7 @@ public class GamePlay:MonoBehaviour {
             //setup the position
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
-            //fatherPos.z = card.transform.position.z;
-            fatherPos.z -= 1;
+            fatherPos.z = -scriptCard.Column.NumberOfCard();
             scriptCard.SetNewOriginalPosition(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;
@@ -358,7 +359,7 @@ public class GamePlay:MonoBehaviour {
         Debug.Log("FromDeckToColumnCard");
         Card scriptCard = card.GetComponent<Card>();
         Card scriptBelowCard = newPosition.GetComponent<Card>();
-        if(scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed,scriptBelowCard.Seed) && scriptBelowCard.ChildCard==null)//check value, seed and that card below doesn't have child
+        if(scriptCard.Value == scriptBelowCard.Value - 1 && CheckSeedInColumn(scriptCard.Seed,scriptBelowCard.Seed) && scriptBelowCard.ChildCard==null && scriptBelowCard.GetRotateCard() == 1)//check value, seed and that card below doesn't have child and it isn't hide
         {
             //Save the state of card before change it
             Card beforeCardStatus = scriptCard.CopyCardClass();
@@ -368,8 +369,7 @@ public class GamePlay:MonoBehaviour {
             //setup the position
             Vector3 fatherPos = newPosition.transform.position;
             fatherPos.y -= GameManager.instance.VerticalSpaceBetweenCard;
-            //fatherPos.z = card.transform.position.z;
-            fatherPos.z -= 1;
+            fatherPos.z = -scriptCard.Column.NumberOfCard();
             scriptCard.SetNewOriginalPosition(fatherPos);
             //set parent relation
             scriptCard.FatherCard = newPosition;
