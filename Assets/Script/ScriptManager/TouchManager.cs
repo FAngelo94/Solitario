@@ -13,7 +13,7 @@ public class TouchManager : MonoBehaviour
     protected void CheckTouchOnObject()
     {
 
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && GameManager.instance.RunningGame)
         {
             switch (Input.GetTouch(0).phase)
             {

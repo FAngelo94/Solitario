@@ -40,11 +40,22 @@ public class GameManager : MonoBehaviour {
         get { return _delayFromDoubleClick; }
     }
 
+    private bool _runningGame;
+    public bool RunningGame
+    {
+        get { return _runningGame; }
+    }
+
     // Use this for initialization
     void Start () {
         if (instance == null)
             instance = this;
         DontDestroyOnLoad(this);
-     
+        _runningGame = true;
 	}
+
+    public void FinishGame()
+    {
+        _runningGame = false;
+    }
 }

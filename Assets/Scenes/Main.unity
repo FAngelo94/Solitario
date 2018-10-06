@@ -558,6 +558,11 @@ Prefab:
       propertyPath: TableObject
       value: 
       objectReference: {fileID: 1628224935}
+    - target: {fileID: 114083131839911426, guid: a7327cfd930d28b419660b06395c3cbc,
+        type: 2}
+      propertyPath: Deck
+      value: 
+      objectReference: {fileID: 80936808}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7327cfd930d28b419660b06395c3cbc, type: 2}
   m_IsPrefabAsset: 0

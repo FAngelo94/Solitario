@@ -120,6 +120,20 @@ public class Column : MonoBehaviour {
         return cards.Count;
     }
 
+    /// <summary>
+    /// Check in the list if there are some hide card
+    /// </summary>
+    /// <returns>True if there are some hide cards</returns>
+    public bool CheckHideCard()
+    {
+        foreach(GameObject card in cards)
+        {
+            if (card.GetComponent<Card>().GetRotateCard() != 1)
+                return true;
+        }
+        return false;
+    }
+
     public void HideLastCard()
     {
         

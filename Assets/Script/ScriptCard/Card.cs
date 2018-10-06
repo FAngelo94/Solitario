@@ -38,7 +38,7 @@ public class Card : TouchManager  {
     private bool selected;
     private Vector3 originalPosition;
     private Collider2D myCollider;
-    private List<Collider2D> externalColliders=new List<Collider2D>();
+    private List<Collider2D> externalColliders;
 
     public GameObject FatherCard { get; set; }//card below this
     public GameObject ChildCard { get; set; }//card above this
@@ -50,6 +50,7 @@ public class Card : TouchManager  {
     private void Awake()
     {
         managerMovement = new MovementCard();
+        externalColliders = new List<Collider2D>();
     }
 
     // Use this for initialization
@@ -125,7 +126,6 @@ public class Card : TouchManager  {
         {
             if (Time.time - checkDoubleClick <= GameManager.instance.DelayFromDoubleClick)
             {
-                Debug.Log("Double click");
                 GamePlay.instance.DoubleTapManage(gameObject);
             }
             else

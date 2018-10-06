@@ -25,6 +25,8 @@ public class ScoreManager : MonoBehaviour {
         private set;
     }
 
+    
+
     private void Awake()
     {
         Score = 0;
@@ -50,4 +52,6 @@ public class ScoreManager : MonoBehaviour {
         Moves++;
         MovesValue.text = Moves.ToString();
     }
+
+
 }
