@@ -45,6 +45,8 @@ public class Card : TouchManager  {
 
     private bool checkFollowCardDelay;
 
+    private float checkDoubleClick;
+
     private void Awake()
     {
         managerMovement = new MovementCard();
@@ -118,10 +120,19 @@ public class Card : TouchManager  {
 
     protected override void SpritePressedBegan()
     {
+
         if (myCollider == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position)))
         {
-            originalPosition = transform.position;
-            selected = true;
+            if (Time.time - checkDoubleClick <= GameManager.instance.DelayFromDoubleClick)
+            {
+                Debug.Log("Double click");
+            }
+            else
+            {
+                checkDoubleClick = Time.time;
+                originalPosition = transform.position;
+                selected = true;
+            }
         }
     }
     protected override void SpritePressedEnded()

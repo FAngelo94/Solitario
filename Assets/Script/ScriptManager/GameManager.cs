@@ -33,6 +33,13 @@ public class GameManager : MonoBehaviour {
         get { return _cardMovementSpeedOnBack; }
     }
 
+    [SerializeField]
+    private float _delayFromDoubleClick = 1f;
+    public float DelayFromDoubleClick
+    {
+        get { return _delayFromDoubleClick; }
+    }
+
     // Use this for initialization
     void Start () {
         if (instance == null)
