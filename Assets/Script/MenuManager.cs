@@ -21,8 +21,7 @@ public class MenuManager : TouchManager {
 	}
 
     protected override void SpritePressedBegan()
-    {
-        Debug.Log(gameObject.name + " -> SpritePressedBegan");
+    { 
         if (gameObject.GetComponent<Collider2D>() == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position)) && GameManager.instance.RunningGame)
         {
             Debug.Log(gameObject.name + " -> SpritePressedBegan IF");

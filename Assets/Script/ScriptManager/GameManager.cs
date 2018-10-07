@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour {
     }
 
     [SerializeField]
-    private float _delayFromDoubleClick = 1f;
+    private float _delayFromDoubleClick = 0.2f;
     public float DelayFromDoubleClick
     {
         get { return _delayFromDoubleClick; }
@@ -46,17 +46,32 @@ public class GameManager : MonoBehaviour {
         get { return _runningGame; }
     }
 
+    
+    public int Draw3Mode
+    {
+        get { return PlayerPrefs.GetInt("Draw3"); }
+    }
+
     private void Awake()
     {
         if (instance == null)
             instance = this;
         _runningGame = false;
+        
     }
 
     // Use this for initialization
     void Start () {
         
 	}
+
+    public void ChangeGameMode()
+    {
+        if (PlayerPrefs.GetInt("Draw3") == 0)
+            PlayerPrefs.SetInt("Draw3", 1);
+        else
+            PlayerPrefs.SetInt("Draw3", 0);
+    }
 
     public void StopGame()
     {

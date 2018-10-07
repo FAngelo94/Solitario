@@ -58,7 +58,6 @@ public class BackManager : TouchManager {
         if (myCollider == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position)))
         {
             BackMove();
-            Debug.Log("BACK");
         }
     }
 
@@ -123,7 +122,25 @@ public class BackManager : TouchManager {
             {
                 if (lastMove.cardBefore.Deck != null)//card go to Deck
                 {
-                    FromDeckToDeck(lastMove);
+                    if (GameManager.instance.Draw3Mode == 0)
+                        FromDeckToDeck(lastMove);
+                    else
+                    {
+                        int count = 0;
+                        while (count < 3 && lastMove.cardAfter.Deck != null && lastMove.cardBefore.Deck != null)
+                        {
+                            FromDeckToDeck(lastMove);
+                            count++;
+                            if (movesSaved.Count > 0 && count < 3)
+                            {
+                                lastMove = movesSaved[movesSaved.Count - 1];
+                                if (lastMove.cardAfter.Deck != null && lastMove.cardBefore.Deck != null)
+                                    movesSaved.Remove(lastMove);
+                            }
+                            else
+                                break;
+                        }
+                    }
                 }
             }
         }

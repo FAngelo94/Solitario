@@ -52,7 +52,15 @@ public class Deck : TouchManager
         if (myCollider == Physics2D.OverlapPoint(Camera.main.ScreenToWorldPoint(Input.GetTouch(0).position)))
         {
             if (deckCards.Count > 0)
-                TakeACard(true);
+            {
+                if (GameManager.instance.Draw3Mode == 0)
+                    TakeACard(true);
+                else
+                {
+                    for (int i = 0; i < 3; i++)
+                        TakeACard(true);
+                }
+            }
             else
                 ResetDeck();
             if (deckCards.Count + wasteCards.Count != 0)
@@ -143,7 +151,6 @@ public class Deck : TouchManager
             deckCards.Remove(deckCards[deckCards.Count - 1]);
             //Move the card in waste
             wasteCards[wasteCards.Count - 1].SetActive(true);
-            Debug.Log("Deck in waste=" + (wasteCards[wasteCards.Count - 1].GetComponent<Card>().Deck == null));
             //Set card layout
             int index = wasteCards.Count - 1;
             while (index >= 0)
@@ -188,8 +195,11 @@ public class Deck : TouchManager
                 AddSingleCard(wasteCards[i]);
             }
             wasteCards = new List<GameObject>();
-            pastScore.Add(ScoreManager.instance.Score);
-            ScoreManager.instance.AddScore(-100);
+            if (GameManager.instance.Draw3Mode==0)
+            {//Not modify the score when deck is reseted if the player are in draw 3 mode
+                pastScore.Add(ScoreManager.instance.Score);
+                ScoreManager.instance.AddScore(-100);
+            }
         }
     }
 

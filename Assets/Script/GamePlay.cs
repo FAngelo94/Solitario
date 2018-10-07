@@ -159,23 +159,27 @@ public class GamePlay:MonoBehaviour {
     public void DoubleTapManage(GameObject card)
     {
         bool newPositionIsValid = false;
-        if (card.GetComponent<Card>().Column != null)//User double click a card that is in a column
-        {     
-            if (CheckPositionGoalAvaiable(card))
-                newPositionIsValid = true;
-        }
-        if (card.GetComponent<Card>().Deck != null)//User double click a card that is in the deck
+        //If the card has child double click not work
+        if (card.GetComponent<Card>().ChildCard == null)
         {
-            if (CheckPositionGoalAvaiable(card))
-                newPositionIsValid = true;
-            else
+            if (card.GetComponent<Card>().Column != null)//User double click a card that is in a column
             {
-                if(CheckColumnAvailable(card))
-                {
+                if (CheckPositionGoalAvaiable(card))
                     newPositionIsValid = true;
-                }
             }
+            if (card.GetComponent<Card>().Deck != null)//User double click a card that is in the deck
+            {
+                if (CheckPositionGoalAvaiable(card))
+                    newPositionIsValid = true;
+                else
+                {
+                    if (CheckColumnAvailable(card))
+                    {
+                        newPositionIsValid = true;
+                    }
+                }
 
+            }
         }
         if (!newPositionIsValid)
         {//User put the card in a not valid position, so the card will
