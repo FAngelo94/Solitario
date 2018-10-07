@@ -650,7 +650,7 @@ public class GamePlay:MonoBehaviour {
             }
             if (countNotEmptyCol <= 4)
             {
-                GameManager.instance.FinishGame();
+                GameManager.instance.StopGame();
                 IEnumerator courutine = AutomaticFinish();
                 StartCoroutine(courutine);
             }
@@ -677,6 +677,7 @@ public class GamePlay:MonoBehaviour {
                 }
             }
         }
+        GameManager.instance.StartGame();//active again the game
     }
 
     

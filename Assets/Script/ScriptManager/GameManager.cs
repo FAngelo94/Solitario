@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour {
         
 	}
 
-    public void FinishGame()
+    public void StopGame()
     {
         _runningGame = false;
     }

@@ -5,11 +5,6 @@ using UnityEngine;
 public class TouchManager : MonoBehaviour
 {
 
-    // Use this for initialization
-    void Start()
-    {
-    }
-
     protected void CheckTouchOnObject()
     {
 
