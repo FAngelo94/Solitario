@@ -310,10 +310,12 @@
     <Compile Include="Assets\Script\ScriptGameComponent\Column.cs" />
     <Compile Include="Assets\Script\ScriptGameComponent\Deck.cs" />
     <Compile Include="Assets\Script\ScriptGameComponent\PositionGoalCard.cs" />
+    <Compile Include="Assets\Script\ScriptGameComponent\Seeds.cs" />
     <Compile Include="Assets\Script\ScriptManager\BackManager.cs" />
     <Compile Include="Assets\Script\ScriptManager\GameManager.cs" />
     <Compile Include="Assets\Script\ScriptManager\HelpManager.cs" />
-    <Compile Include="Assets\Script\ScriptManager\ResetManager.cs" />
+    <Compile Include="Assets\Script\ScriptManager\MenuManager.cs" />
+    <Compile Include="Assets\Script\ScriptManager\RuleManager.cs" />
     <Compile Include="Assets\Script\ScriptManager\ScoreManager.cs" />
     <Compile Include="Assets\Script\ScriptManager\TouchManager.cs" />
   </ItemGroup>
