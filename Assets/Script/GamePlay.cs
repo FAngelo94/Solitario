@@ -607,7 +607,7 @@ public class GamePlay:MonoBehaviour {
     /// </summary>
     /// <param name="s1">Seed of first card</param>
     /// <param name="s2">Seed of second card</param>
-    private bool CheckSeedInColumn(String s1,String s2)
+    private bool CheckSeedInColumn(string s1,string s2)
     {
         if ((s1.Equals("H") || s1.Equals("D")) && (s2.Equals("C") || s2.Equals("S")))
             return true;
@@ -649,15 +649,10 @@ public class GamePlay:MonoBehaviour {
                 Column scriptCol = column.GetComponent<Column>();
                 if (scriptCol.CheckHideCard())
                     return;
-                if (scriptCol.NumberOfCard() > 0)
-                    countNotEmptyCol++;
             }
-            if (countNotEmptyCol <= 4)
-            {
-                GameManager.instance.StopGame();
-                IEnumerator courutine = AutomaticFinish();
-                StartCoroutine(courutine);
-            }
+            GameManager.instance.StopGame();
+            IEnumerator courutine = AutomaticFinish();
+            StartCoroutine(courutine);
         }
     }
     IEnumerator AutomaticFinish()

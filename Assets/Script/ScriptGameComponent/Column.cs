@@ -152,4 +152,18 @@ public class Column : MonoBehaviour {
             return cards[cards.Count - 1].GetComponent<Card>();
         return null;
     }
+
+    public List<Card> GetAllNotHideCards()
+    {
+        List<Card> notHideCards = new List<Card>();
+        foreach(GameObject card in cards)
+        {
+            Card scriptCard = card.GetComponent<Card>();
+            if (scriptCard.GetRotateCard() == 1)
+                notHideCards.Add(scriptCard);
+        }
+        return notHideCards;
+    }
+
+    
 }

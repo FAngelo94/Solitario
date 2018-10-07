@@ -24,17 +24,25 @@ public class Dealer : MonoBehaviour {
     [Header("List of seeds of cards in order (H, D, C, S)")]
     [SerializeField]
     private List<Sprite> SpriteSeeds;
+    public List<Sprite> getSpriteSeeds
+    {
+        get { return SpriteSeeds; }
+    }
 
     [Header("List of value of cards in order")]
     [SerializeField]
     private List<Sprite> SpriteValues;
+    public List<Sprite> getSpriteValues
+    {
+        get { return SpriteValues; }
+    }
 
     [Header("Prefab of card")]
     [SerializeField]
     private GameObject BasicCard;
 
     private List<string> seeds = new List<string> { "H", "D", "C", "S" };
-    private int[] values = {1,2,3,4,5,6,7,8,9,10,11,12,13 };
+    private int[] values = {1,2,3,4,5,6,7,8,9,10,11,12,13};
 
     private bool setCardPosition;
     private bool finishSetUp;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -52,18 +53,44 @@ public class GameManager : MonoBehaviour {
         get { return PlayerPrefs.GetInt("Draw3"); }
     }
 
+    [SerializeField]
+    private float _cardHelpMovementSpeed = 20;
+    public float CardHelpMovementSpeed
+    {
+        get { return _cardHelpMovementSpeed; }
+    }
+
+    [SerializeField]
+    private Text UITime;
+    private int time;
+
     private void Awake()
     {
         if (instance == null)
             instance = this;
         _runningGame = false;
-        
+        time = 0;
     }
 
     // Use this for initialization
     void Start () {
-        
-	}
+
+        IEnumerator courutine = Timer();
+        StartCoroutine(courutine);
+    }
+
+    IEnumerator Timer()
+    {
+        while (true)
+        {
+            if (_runningGame)
+            {
+                time++;
+                UITime.text = time.ToString();
+            }
+            yield return new WaitForSeconds(1);
+        }
+    }
 
     public void ChangeGameMode()
     {

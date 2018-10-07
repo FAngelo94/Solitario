@@ -9,12 +9,16 @@ public class Deck : TouchManager
     [SerializeField]
     [Header("WasteObject")]
     private GameObject Waste;
+    public GameObject getWaste
+    {
+        get { return Waste; }
+    }
 
     private List<GameObject> deckCards = new List<GameObject>();
     private List<GameObject> wasteCards = new List<GameObject>();
-    
+
     private Collider2D myCollider;
-    
+
     private bool checkMoveCard;
     private bool checkUndoMove;
 
@@ -36,7 +40,7 @@ public class Deck : TouchManager
     {
         CheckTouchOnObject();
         if (checkMoveCard)
-        { 
+        {
             checkMoveCard = false;
             MoveWasteCards();
         }
@@ -110,7 +114,7 @@ public class Deck : TouchManager
         //fixed the cards in waste
         int indexWaste = wasteCards.Count - 1;
         int countWaste = 0;
-        while(countWaste<3)
+        while (countWaste < 3)
         {
             if (indexWaste >= 0)
             {
@@ -195,7 +199,7 @@ public class Deck : TouchManager
                 AddSingleCard(wasteCards[i]);
             }
             wasteCards = new List<GameObject>();
-            if (GameManager.instance.Draw3Mode==0)
+            if (GameManager.instance.Draw3Mode == 0)
             {//Not modify the score when deck is reseted if the player are in draw 3 mode
                 pastScore.Add(ScoreManager.instance.Score);
                 ScoreManager.instance.AddScore(-100);
@@ -267,12 +271,12 @@ public class Deck : TouchManager
         {//Put all the card in waste
             int count = deckCards.Count;
             for (int i = 0; i < count; i++)
-                    TakeACard(false);
-           if(pastScore.Count>0)
+                TakeACard(false);
+            if (pastScore.Count > 0)
             {
                 ScoreManager.instance.AddScore(pastScore[pastScore.Count - 1]);
                 pastScore[pastScore.Count - 1] = -1;
-                pastScore.RemoveAll(x => x==-1);
+                pastScore.RemoveAll(x => x == -1);
             }
             return true;
         }
@@ -305,14 +309,24 @@ public class Deck : TouchManager
 
     /// <summary>
     /// </summary>
-    /// <returns>The Card script of the active card in the waste</returns>
-    public List<GameObject> GetActiveCardFromWaste()
+    /// <returns>All cards in deck or waste</returns>
+    public List<GameObject> GetAllCardsFromDeck()
     {
         List<GameObject> allDeckCards = new List<GameObject>();
         allDeckCards.AddRange(deckCards);
         allDeckCards.AddRange(wasteCards);
-        if (wasteCards.Count > 0)
+        if (allDeckCards.Count > 0)
             return allDeckCards;
+        return null;
+    }
+
+    /// <summary>
+    /// </summary>
+    /// <returns>The Card script of the active card in the waste</returns>
+    public Card GetActiveCardFromWaste()
+    {
+        if (wasteCards.Count > 0)
+            return wasteCards[wasteCards.Count - 1].GetComponent<Card>();
         return null;
     }
 }
