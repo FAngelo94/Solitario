@@ -332,6 +332,11 @@ Prefab:
       propertyPath: UITime
       value: 
       objectReference: {fileID: 1998839033}
+    - target: {fileID: 114516135550890600, guid: a7327cfd930d28b419660b06395c3cbc,
+        type: 2}
+      propertyPath: _cardHelpMovementSpeed
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a7327cfd930d28b419660b06395c3cbc, type: 2}
   m_IsPrefabAsset: 0
