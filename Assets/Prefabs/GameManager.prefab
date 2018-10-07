@@ -246,6 +246,7 @@ MonoBehaviour:
   _cardMovementSpeedOnBack: 50
   _delayFromDoubleClick: 0.2
   _cardHelpMovementSpeed: 1
+  UITime: {fileID: 0}
 --- !u!114 &114642864362846712
 MonoBehaviour:
   m_ObjectHideFlags: 1
